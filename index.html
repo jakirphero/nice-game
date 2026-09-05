@@ -1,38 +1,41 @@
 <!DOCTYPE html>
 <html lang="bn">
 <head>
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
+
 <title>Virtual Dice Game</title>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <style>
+
 *{
 box-sizing:border-box;
 margin:0;
-padding:0
+padding:0;
 }
 
 body{
 font-family:Arial,sans-serif;
-background:linear-gradient(135deg,#0f172a,#1e3a8a);
+background:linear-gradient(135deg,#020617,#1e3a8a,#172554);
 min-height:100vh;
-color:#fff
+color:white;
 }
 
 .container{
 width:100%;
-max-width:520px;
+max-width:540px;
 margin:auto;
-padding:20px
+padding:20px;
 }
 
 .logo{
 text-align:center;
 font-size:30px;
 font-weight:bold;
-margin:20px 0
+margin:20px 0 25px;
 }
 
 .card{
@@ -41,12 +44,13 @@ border:1px solid rgba(255,255,255,.15);
 border-radius:20px;
 padding:20px;
 margin-bottom:18px;
-backdrop-filter:blur(12px)
+backdrop-filter:blur(12px);
+box-shadow:0 10px 30px rgba(0,0,0,.15);
 }
 
 h2{
 text-align:center;
-margin-bottom:18px
+margin-bottom:18px;
 }
 
 input{
@@ -56,7 +60,9 @@ margin-bottom:12px;
 border:0;
 border-radius:10px;
 font-size:16px;
-outline:none
+outline:none;
+background:white;
+color:#111827;
 }
 
 button{
@@ -66,46 +72,50 @@ margin-top:8px;
 border:0;
 border-radius:10px;
 background:#22c55e;
-color:#fff;
+color:white;
 font-size:16px;
 font-weight:bold;
-cursor:pointer
+cursor:pointer;
 }
 
 button:hover{
-opacity:.9
+opacity:.9;
 }
 
 button:disabled{
-opacity:.6;
-cursor:not-allowed
+opacity:.5;
+cursor:not-allowed;
 }
 
 .blue{
-background:#2563eb
+background:#2563eb;
 }
 
 .red{
-background:#dc2626
+background:#dc2626;
 }
 
 .gray{
-background:#475569
+background:#475569;
 }
 
 .gold{
-background:#d97706
+background:#d97706;
 }
 
 .hidden{
-display:none!important
+display:none!important;
 }
 
 .switch{
 text-align:center;
 color:#93c5fd;
 margin-top:15px;
-cursor:pointer
+cursor:pointer;
+}
+
+.switch:hover{
+text-decoration:underline;
 }
 
 .message{
@@ -113,84 +123,94 @@ margin-top:12px;
 padding:12px;
 text-align:center;
 border-radius:8px;
-background:rgba(255,255,255,.1);
 line-height:1.5;
-word-break:break-word
+word-break:break-word;
 }
 
 .message.success{
 background:rgba(34,197,94,.18);
-color:#bbf7d0
+color:#bbf7d0;
 }
 
 .message.error{
 background:rgba(239,68,68,.18);
-color:#fecaca
+color:#fecaca;
 }
 
 .message.info{
 background:rgba(59,130,246,.18);
-color:#bfdbfe
+color:#bfdbfe;
+}
+
+.connection{
+margin-top:12px;
+text-align:center;
+font-size:13px;
+color:#cbd5e1;
+padding:10px;
+border-radius:10px;
+background:rgba(255,255,255,.05);
 }
 
 .profile{
 display:flex;
 justify-content:space-between;
 align-items:center;
-gap:10px
+gap:10px;
 }
 
 .user-name{
 font-size:20px;
-font-weight:bold
+font-weight:bold;
 }
 
 .user-email{
 font-size:13px;
 color:#cbd5e1;
 margin-top:5px;
-word-break:break-all
+word-break:break-all;
 }
 
 .role{
 display:inline-block;
 margin-top:7px;
-padding:4px 9px;
+padding:4px 10px;
 border-radius:20px;
 background:#2563eb;
-font-size:12px
+font-size:12px;
 }
 
 .admin-role{
-background:#d97706
+background:#d97706;
 }
 
 .points-box{
-text-align:center
+text-align:center;
+min-width:100px;
 }
 
 .points{
 color:#4ade80;
 font-size:30px;
-font-weight:bold
+font-weight:bold;
 }
 
 .points-label{
 font-size:12px;
-color:#cbd5e1
+color:#cbd5e1;
 }
 
 .dice{
 display:flex;
 justify-content:center;
 gap:20px;
-margin:25px 0
+margin:25px 0;
 }
 
 .die{
 width:90px;
 height:90px;
-background:#fff;
+background:white;
 color:#111827;
 border-radius:18px;
 display:flex;
@@ -198,26 +218,27 @@ align-items:center;
 justify-content:center;
 font-size:42px;
 font-weight:bold;
-box-shadow:0 8px 20px rgba(0,0,0,.25)
+box-shadow:0 8px 20px rgba(0,0,0,.3);
 }
 
 .total{
 text-align:center;
 font-size:22px;
-margin-bottom:20px
+margin-bottom:20px;
 }
 
 .options{
 display:grid;
-gap:10px
+gap:10px;
 }
 
 .option{
-background:#334155
+background:#334155;
 }
 
 .option.selected{
-background:#16a34a
+background:#16a34a;
+box-shadow:0 0 0 2px #86efac;
 }
 
 .result{
@@ -225,44 +246,41 @@ text-align:center;
 min-height:30px;
 margin-top:15px;
 font-size:20px;
-font-weight:bold
+font-weight:bold;
 }
 
 .win{
-color:#4ade80
+color:#4ade80;
 }
 
 .loss{
-color:#f87171
+color:#f87171;
 }
 
 .stat{
 display:flex;
 justify-content:space-between;
 padding:10px 0;
-border-bottom:1px solid rgba(255,255,255,.1)
+border-bottom:1px solid rgba(255,255,255,.1);
 }
 
 .history{
 background:rgba(255,255,255,.06);
 padding:12px;
 border-radius:10px;
-margin-bottom:10px
+margin-bottom:10px;
 }
 
 .small{
 color:#cbd5e1;
 font-size:13px;
-margin-top:4px
+margin-top:5px;
 }
 
 .loading{
 text-align:center;
-padding:15px
-}
-
-.admin-button{
-background:#d97706
+padding:15px;
+color:#cbd5e1;
 }
 
 .warning{
@@ -272,26 +290,53 @@ border-radius:10px;
 text-align:center;
 margin-bottom:15px;
 color:#fde68a;
-line-height:1.5
+line-height:1.5;
 }
 
-.connection{
-font-size:12px;
+.admin-button{
+background:#d97706;
+}
+
+.empty{
 text-align:center;
+padding:15px;
 color:#cbd5e1;
-margin-top:10px
+}
+
+.divider{
+height:1px;
+background:rgba(255,255,255,.1);
+margin:15px 0;
 }
 
 @media(max-width:400px){
 
+.container{
+padding:12px;
+}
+
 .die{
 width:70px;
 height:70px;
-font-size:32px
+font-size:32px;
+}
+
+.profile{
+align-items:flex-start;
+}
+
+.user-name{
+font-size:17px;
+}
+
+.points{
+font-size:25px;
 }
 
 }
+
 </style>
+
 </head>
 
 <body>
@@ -302,7 +347,12 @@ font-size:32px
 🎲 Virtual Dice Game
 </div>
 
+
+<!-- ================= AUTH ================= -->
+
 <div id="authSection">
+
+<!-- REGISTER -->
 
 <div id="registerBox" class="card">
 
@@ -351,7 +401,12 @@ class="message hidden"
 </div>
 
 
-<div id="loginBox" class="card hidden">
+<!-- LOGIN -->
+
+<div
+id="loginBox"
+class="card hidden"
+>
 
 <h2>🔐 Login</h2>
 
@@ -391,14 +446,25 @@ class="message hidden"
 
 </div>
 
-<div class="connection" id="connectionStatus">
-Supabase connection পরীক্ষা হচ্ছে...
+
+<div
+id="connectionStatus"
+class="connection"
+>
+⏳ Supabase Connection পরীক্ষা হচ্ছে...
 </div>
 
 </div>
 
 
-<div id="appSection" class="hidden">
+<!-- ================= APP ================= -->
+
+<div
+id="appSection"
+class="hidden"
+>
+
+<!-- USER PROFILE -->
 
 <div class="card">
 
@@ -406,13 +472,22 @@ Supabase connection পরীক্ষা হচ্ছে...
 
 <div>
 
-<div id="userName" class="user-name">
+<div
+id="userName"
+class="user-name"
+>
 User
 </div>
 
-<div id="userEmail" class="user-email"></div>
+<div
+id="userEmail"
+class="user-email"
+></div>
 
-<div id="userRole" class="role">
+<div
+id="userRole"
+class="role"
+>
 User
 </div>
 
@@ -420,7 +495,10 @@ User
 
 <div class="points-box">
 
-<div id="userPoints" class="points">
+<div
+id="userPoints"
+class="points"
+>
 0
 </div>
 
@@ -432,6 +510,7 @@ Virtual Points
 
 </div>
 
+
 <button
 id="adminButton"
 class="admin-button hidden"
@@ -440,38 +519,61 @@ onclick="openAdmin()"
 👑 Admin Panel
 </button>
 
+
 <button
 class="red"
 onclick="logoutUser()"
 >
-Logout
+🚪 Logout
 </button>
 
 </div>
 
 
-<div id="gameSection">
+<!-- GAME -->
+
+<div
+id="gameSection"
+>
 
 <div class="card">
 
 <h2>🎲 Dice Game</h2>
 
 <div class="warning">
-এটি শুধুমাত্র Virtual Points Game
+⚠️ এটি শুধুমাত্র Virtual Points Game।
+কোনো Real Money ব্যবহার করা হয় না।
 </div>
+
 
 <div class="dice">
 
-<div id="dice1" class="die">?</div>
+<div
+id="dice1"
+class="die"
+>
+?
+</div>
 
-<div id="dice2" class="die">?</div>
+<div
+id="dice2"
+class="die"
+>
+?
+</div>
 
 </div>
+
 
 <div class="total">
+
 Total:
-<strong id="diceTotal">-</strong>
+<strong id="diceTotal">
+-
+</strong>
+
 </div>
+
 
 <div class="options">
 
@@ -501,12 +603,15 @@ onclick="selectOption('EVEN')"
 
 </div>
 
+
 <button
+id="rollButton"
 class="blue"
 onclick="playGame()"
 >
 🎲 Dice Roll
 </button>
+
 
 <div
 id="gameResult"
@@ -516,31 +621,48 @@ class="result"
 </div>
 
 
+<!-- STATISTICS -->
+
 <div class="card">
 
 <h2>📊 Dice Statistics</h2>
 
 <div id="statistics">
-<div class="loading">Loading...</div>
+
+<div class="loading">
+Loading...
 </div>
 
 </div>
 
+</div>
+
+
+<!-- HISTORY -->
 
 <div class="card">
 
 <h2>📜 আমার Game History</h2>
 
 <div id="history">
-<div class="loading">Loading...</div>
+
+<div class="loading">
+Loading...
 </div>
 
 </div>
 
 </div>
 
+</div>
 
-<div id="adminSection" class="hidden">
+
+<!-- ================= ADMIN ================= -->
+
+<div
+id="adminSection"
+class="hidden"
+>
 
 <div class="card">
 
@@ -559,17 +681,23 @@ onclick="closeAdmin()"
 
 </div>
 
+
 <div class="card">
 
 <h2>👥 User Management</h2>
 
 <div id="usersList">
-<div class="loading">Loading...</div>
+
+<div class="loading">
+Loading Users...
 </div>
 
 </div>
 
 </div>
+
+</div>
+
 
 </div>
 
@@ -578,23 +706,57 @@ onclick="closeAdmin()"
 
 <script>
 
+/* =====================================================
+   SUPABASE CONFIG
+===================================================== */
 
-const SUPABASE_URL="https://mulroqtysdawwdrpdxtx.supabase.co";
+const SUPABASE_URL =
+"https://mulroqtysdawwdrpdxtx.supabase.co";
 
-const SUPABASE_PUBLISHABLE_KEY="sb_publishable_-v7fU5dwzz0LddbM-f87PQ_-L1BH-bl";
+const SUPABASE_PUBLISHABLE_KEY =
+"sb_publishable_-v7fU5dwzz0LddbM-f87PQ_-L1BH-bl";
+
+
+/*
+   আপনার Admin User ID
+*/
 
 const ADMIN_ID =
 "95b9a85a-c30b-4111-b688-20abde0d3236";
 
 
+let supabaseClient = null;
+
 let currentUser = null;
-let selectedOption = null;
+
 let currentProfile = null;
 
+let selectedOption = null;
 
-let supabaseClient;
+
+/* =====================================================
+   INITIALIZE SUPABASE
+===================================================== */
+
+function initializeSupabase(){
+
+const status =
+document.getElementById("connectionStatus");
 
 try{
+
+if(
+!window.supabase ||
+typeof window.supabase.createClient !== "function"
+){
+
+status.textContent =
+"❌ Supabase Library Load হয়নি। Internet পরীক্ষা করুন।";
+
+return false;
+
+}
+
 
 supabaseClient =
 window.supabase.createClient(
@@ -602,18 +764,74 @@ SUPABASE_URL,
 SUPABASE_PUBLISHABLE_KEY
 );
 
-}catch(error){
-
-console.error("Supabase initialization error:",error);
-
-const status =
-document.getElementById("connectionStatus");
 
 status.textContent =
-"❌ Supabase চালু করা যাচ্ছে না";
+"⏳ Supabase Server পরীক্ষা হচ্ছে...";
+
+return true;
+
+}catch(error){
+
+console.error(
+"SUPABASE INIT ERROR:",
+error
+);
+
+status.textContent =
+"❌ Supabase চালু করা যাচ্ছে না।";
+
+return false;
 
 }
 
+}
+
+
+/* =====================================================
+   MESSAGE
+===================================================== */
+
+function message(
+id,
+text,
+type="info"
+){
+
+const element =
+document.getElementById(id);
+
+if(!element)return;
+
+element.textContent = text;
+
+element.className =
+"message " + type;
+
+}
+
+
+/* =====================================================
+   CLEAR MESSAGE
+===================================================== */
+
+function clearMessage(id){
+
+const element =
+document.getElementById(id);
+
+if(!element)return;
+
+element.textContent = "";
+
+element.className =
+"message hidden";
+
+}
+
+
+/* =====================================================
+   SHOW LOGIN
+===================================================== */
 
 function showLogin(){
 
@@ -625,8 +843,14 @@ document
 .getElementById("loginBox")
 .classList.remove("hidden");
 
+clearMessage("registerMessage");
+
 }
 
+
+/* =====================================================
+   SHOW REGISTER
+===================================================== */
 
 function showRegister(){
 
@@ -638,107 +862,275 @@ document
 .getElementById("registerBox")
 .classList.remove("hidden");
 
-}
-
-
-function message(id,text,type="info"){
-
-const el =
-document.getElementById(id);
-
-if(!el)return;
-
-el.textContent = text;
-
-el.className =
-"message " + type;
+clearMessage("loginMessage");
 
 }
 
 
-function clearMessage(id){
-
-const el =
-document.getElementById(id);
-
-if(!el)return;
-
-el.textContent = "";
-
-el.className =
-"message hidden";
-
-}
-
+/* =====================================================
+   ERROR TRANSLATION
+===================================================== */
 
 function translateError(error){
 
-if(!error)return "Unknown error";
+if(!error){
+
+return "Unknown error";
+
+}
 
 const msg =
-String(error.message || error);
+String(
+error.message ||
+error.error_description ||
+error
+);
 
 const lower =
 msg.toLowerCase();
 
 
+console.error(
+"SUPABASE ERROR:",
+error
+);
+
+
+/* Login */
+
 if(
 lower.includes("invalid login credentials")
 ){
+
 return "❌ Email অথবা Password ভুল।";
+
 }
+
+
+/* Email */
 
 if(
 lower.includes("email not confirmed")
 ){
-return "📧 আপনার Email এখনো verify করা হয়নি। Email verify করে আবার Login করুন।";
+
+return "📧 আপনার Email এখনো Verify করা হয়নি। Email Verify করে Login করুন।";
+
 }
 
+
+/* Already registered */
+
 if(
-lower.includes("user already registered")
+lower.includes("user already registered") ||
+lower.includes("already registered")
 ){
-return "⚠️ এই Email দিয়ে আগে থেকেই Account আছে। Login করুন।";
+
+return "⚠️ এই Email দিয়ে Account আগে থেকেই আছে। Login করুন।";
+
 }
+
+
+/* Password */
 
 if(
 lower.includes("password should be at least")
 ){
+
 return "⚠️ Password কমপক্ষে ৬ অক্ষরের হতে হবে।";
+
 }
 
+
+/* Invalid email */
+
 if(
-lower.includes("email address") &&
+lower.includes("invalid email") ||
+(
+lower.includes("email") &&
 lower.includes("invalid")
+)
 ){
+
 return "⚠️ সঠিক Email Address দিন।";
+
 }
+
+
+/* Signup disabled */
 
 if(
 lower.includes("signup is disabled")
 ){
-return "❌ Supabase-এ নতুন User Registration বন্ধ আছে।";
+
+return "❌ Supabase-এ Registration বন্ধ আছে।";
+
 }
+
+
+/* Fetch */
 
 if(
 lower.includes("failed to fetch")
 ){
-return "❌ Supabase Server-এর সাথে Connection হচ্ছে না। Internet এবং Supabase URL/Key পরীক্ষা করুন।";
+
+return "❌ Supabase Server-এর সাথে Connection হচ্ছে না। Internet, Supabase Project এবং URL/Key পরীক্ষা করুন।";
+
 }
+
+
+/* Network */
 
 if(
 lower.includes("network")
 ){
+
 return "❌ Network সমস্যা হয়েছে। Internet Connection পরীক্ষা করুন।";
+
 }
+
+
+/* 401 */
+
+if(
+lower.includes("401")
+){
+
+return "❌ Supabase API Key অথবা Project Configuration সমস্যা।";
+
+}
+
+
+/* 404 */
+
+if(
+lower.includes("404")
+){
+
+return "❌ Supabase Project URL সঠিক নয় অথবা API Endpoint পাওয়া যাচ্ছে না।";
+
+}
+
+
+/* RLS */
+
+if(
+lower.includes("row-level security") ||
+lower.includes("rls")
+){
+
+return "❌ Database RLS Policy-এর কারণে Access বন্ধ আছে।";
+
+}
+
+
+/* Permission */
+
+if(
+lower.includes("permission denied")
+){
+
+return "❌ Database Permission নেই। Supabase RLS Policy পরীক্ষা করুন।";
+
+}
+
 
 return "❌ " + msg;
 
 }
 
 
+/* =====================================================
+   TEST CONNECTION
+===================================================== */
+
+async function testConnection(){
+
+const status =
+document.getElementById(
+"connectionStatus"
+);
+
+
+if(!supabaseClient){
+
+status.textContent =
+"❌ Supabase Client তৈরি হয়নি।";
+
+return false;
+
+}
+
+
+try{
+
+const response =
+await supabaseClient.auth.getSession();
+
+
+console.log(
+"SUPABASE SESSION TEST:",
+response
+);
+
+
+if(response.error){
+
+console.error(
+"SUPABASE CONNECTION ERROR:",
+response.error
+);
+
+status.textContent =
+translateError(response.error);
+
+return false;
+
+}
+
+
+status.textContent =
+"✅ Supabase Connected";
+
+return true;
+
+}catch(error){
+
+console.error(
+"SUPABASE CONNECTION EXCEPTION:",
+error
+);
+
+status.textContent =
+translateError(error);
+
+return false;
+
+}
+
+}
+
+
+/* =====================================================
+   REGISTER
+===================================================== */
+
 async function registerUser(){
 
 clearMessage("registerMessage");
+
+
+if(!supabaseClient){
+
+message(
+"registerMessage",
+"❌ Supabase Connection তৈরি হয়নি।",
+"error"
+);
+
+return;
+
+}
+
 
 const name =
 document
@@ -746,11 +1138,13 @@ document
 .value
 .trim();
 
+
 const email =
 document
 .getElementById("registerEmail")
 .value
 .trim();
+
 
 const password =
 document
@@ -811,7 +1205,10 @@ return;
 
 
 const button =
-document.getElementById("registerBtn");
+document.getElementById(
+"registerBtn"
+);
+
 
 button.disabled = true;
 
@@ -821,30 +1218,25 @@ button.textContent =
 
 message(
 "registerMessage",
-"⏳ Supabase-এর সাথে যোগাযোগ করা হচ্ছে...",
+"⏳ Registration হচ্ছে...",
 "info"
 );
 
 
 try{
 
-const {
-data,
-error
-} =
+const result =
 await supabaseClient.auth.signUp({
 
-email: email,
+email:email,
 
-password: password,
+password:password,
 
 options:{
+
 data:{
 name:name
-},
-
-emailRedirectTo:
-window.location.origin
+}
 
 }
 
@@ -852,14 +1244,16 @@ window.location.origin
 
 
 console.log(
-"REGISTER RESPONSE:",
-data
+"REGISTER RESULT:",
+result
 );
 
-console.log(
-"REGISTER ERROR:",
-error
-);
+
+const data =
+result.data;
+
+const error =
+result.error;
 
 
 if(error){
@@ -870,46 +1264,30 @@ translateError(error),
 "error"
 );
 
-button.disabled = false;
-
-button.textContent =
-"Register";
-
 return;
 
 }
 
 
-if(!data || !data.user){
+if(
+!data ||
+!data.user
+){
 
 message(
 "registerMessage",
-"❌ Account তৈরি হয়নি। Supabase response পাওয়া যায়নি।",
+"❌ Account তৈরি হয়নি। Supabase থেকে User পাওয়া যায়নি।",
 "error"
 );
-
-button.disabled = false;
-
-button.textContent =
-"Register";
 
 return;
 
 }
 
 
-document
-.getElementById("registerName")
-.value="";
-
-document
-.getElementById("registerEmail")
-.value="";
-
-document
-.getElementById("registerPassword")
-.value="";
-
+/*
+   Session থাকলে সরাসরি App
+*/
 
 if(data.session){
 
@@ -918,23 +1296,28 @@ data.user;
 
 message(
 "registerMessage",
-"✅ Registration সফল হয়েছে। Account-এ প্রবেশ করা হচ্ছে...",
+"✅ Registration সফল হয়েছে।",
 "success"
 );
 
 await loadApp();
 
-}else{
+return;
+
+}
+
+
+/*
+   Session না থাকলে Email verification প্রয়োজন
+*/
 
 showLogin();
 
 message(
 "loginMessage",
-"✅ Registration সফল হয়েছে। আপনার Email verify করে তারপর Login করুন।",
+"✅ Account তৈরি হয়েছে। Email Verify করে Login করুন।",
 "success"
 );
-
-}
 
 
 }catch(error){
@@ -962,15 +1345,34 @@ button.textContent =
 }
 
 
+/* =====================================================
+   LOGIN
+===================================================== */
+
 async function loginUser(){
 
 clearMessage("loginMessage");
+
+
+if(!supabaseClient){
+
+message(
+"loginMessage",
+"❌ Supabase Connection তৈরি হয়নি।",
+"error"
+);
+
+return;
+
+}
+
 
 const email =
 document
 .getElementById("loginEmail")
 .value
 .trim();
+
 
 const password =
 document
@@ -1005,7 +1407,10 @@ return;
 
 
 const button =
-document.getElementById("loginBtn");
+document.getElementById(
+"loginBtn"
+);
+
 
 button.disabled = true;
 
@@ -1022,10 +1427,7 @@ message(
 
 try{
 
-const {
-data,
-error
-} =
+const result =
 await supabaseClient.auth.signInWithPassword({
 
 email:email,
@@ -1036,14 +1438,16 @@ password:password
 
 
 console.log(
-"LOGIN RESPONSE:",
-data
+"LOGIN RESULT:",
+result
 );
 
-console.log(
-"LOGIN ERROR:",
-error
-);
+
+const data =
+result.data;
+
+const error =
+result.error;
 
 
 if(error){
@@ -1054,28 +1458,21 @@ translateError(error),
 "error"
 );
 
-button.disabled = false;
-
-button.textContent =
-"Login";
-
 return;
 
 }
 
 
-if(!data || !data.user){
+if(
+!data ||
+!data.user
+){
 
 message(
 "loginMessage",
-"❌ Login সফল হয়নি। User পাওয়া যায়নি।",
+"❌ Login সফল হয়নি।",
 "error"
 );
-
-button.disabled = false;
-
-button.textContent =
-"Login";
 
 return;
 
@@ -1121,16 +1518,24 @@ button.textContent =
 }
 
 
+/* =====================================================
+   LOGOUT
+===================================================== */
+
 async function logoutUser(){
 
 try{
 
+if(supabaseClient){
+
 await supabaseClient.auth.signOut();
+
+}
 
 }catch(error){
 
 console.error(
-"Logout Error:",
+"LOGOUT ERROR:",
 error
 );
 
@@ -1148,39 +1553,54 @@ document
 .getElementById("appSection")
 .classList.add("hidden");
 
+
 document
 .getElementById("authSection")
 .classList.remove("hidden");
+
 
 document
 .getElementById("adminSection")
 .classList.add("hidden");
 
+
 document
 .getElementById("gameSection")
 .classList.remove("hidden");
+
 
 showLogin();
 
 }
 
 
+/* =====================================================
+   LOAD APP
+===================================================== */
+
 async function loadApp(){
 
-if(!currentUser)return;
+if(!currentUser){
+
+return;
+
+}
 
 
 document
 .getElementById("authSection")
 .classList.add("hidden");
 
+
 document
 .getElementById("appSection")
 .classList.remove("hidden");
 
+
 document
 .getElementById("adminSection")
 .classList.add("hidden");
+
 
 document
 .getElementById("gameSection")
@@ -1196,22 +1616,40 @@ await loadHistory();
 }
 
 
+/* =====================================================
+   LOAD PROFILE
+===================================================== */
+
 async function loadProfile(){
 
-if(!currentUser)return;
+if(!currentUser){
+
+return false;
+
+}
 
 
 try{
 
-const {
-data,
-error
-} =
+const result =
 await supabaseClient
 .from("profiles")
 .select("*")
 .eq("id",currentUser.id)
 .maybeSingle();
+
+
+const data =
+result.data;
+
+const error =
+result.error;
+
+
+console.log(
+"PROFILE:",
+data
+);
 
 
 if(error){
@@ -1221,89 +1659,116 @@ console.error(
 error
 );
 
-document
-.getElementById("userName")
-.textContent =
-currentUser.user_metadata?.name || "User";
+currentProfile = {
 
-document
-.getElementById("userEmail")
-.textContent =
-currentUser.email || "";
+id:currentUser.id,
 
-return;
+name:
+currentUser.user_metadata?.name ||
+"User",
 
-}
+email:
+currentUser.email ||
+"",
 
+points:0,
 
-if(!data){
+role:
+currentUser.id===ADMIN_ID
+?
+"admin"
+:
+"user"
 
-console.warn(
-"Profile পাওয়া যায়নি। Trigger ঠিক আছে কিনা পরীক্ষা করুন।"
-);
+};
+
+}else if(data){
+
+currentProfile = data;
+
+}else{
+
+/*
+   Profile না থাকলে temporary profile
+*/
 
 currentProfile = {
 
 id:currentUser.id,
 
 name:
-currentUser.user_metadata?.name || "User",
+currentUser.user_metadata?.name ||
+"User",
 
 email:
-currentUser.email,
+currentUser.email ||
+"",
 
 points:0,
 
 role:
-currentUser.id === ADMIN_ID
-?"admin"
-:"user"
+currentUser.id===ADMIN_ID
+?
+"admin"
+:
+"user"
 
 };
 
-}else{
-
-currentProfile = data;
+console.warn(
+"Profile পাওয়া যায়নি। Supabase trigger পরীক্ষা করুন।"
+);
 
 }
 
 
-const profile =
-currentProfile;
-
+/* Name */
 
 document
 .getElementById("userName")
 .textContent =
-profile.name || "User";
+currentProfile.name ||
+currentUser.user_metadata?.name ||
+"User";
 
+
+/* Email */
 
 document
 .getElementById("userEmail")
 .textContent =
-profile.email || currentUser.email || "";
+currentProfile.email ||
+currentUser.email ||
+"";
 
+
+/* Points */
 
 document
 .getElementById("userPoints")
 .textContent =
-profile.points || 0;
+Number(currentProfile.points || 0);
 
 
-const roleElement =
+/* Role */
+
+const role =
 document.getElementById("userRole");
 
 
-if(
-profile.role === "admin" ||
-currentUser.id === ADMIN_ID
-){
+const isAdmin =
+currentUser.id===ADMIN_ID ||
+currentProfile.role==="admin";
 
-roleElement.textContent =
+
+if(isAdmin){
+
+role.textContent =
 "👑 Admin";
 
-roleElement.className =
+role.className =
 "role admin-role";
+
 
 document
 .getElementById("adminButton")
@@ -1311,11 +1776,12 @@ document
 
 }else{
 
-roleElement.textContent =
+role.textContent =
 "User";
 
-roleElement.className =
+role.className =
 "role";
+
 
 document
 .getElementById("adminButton")
@@ -1324,17 +1790,26 @@ document
 }
 
 
+return true;
+
+
 }catch(error){
 
 console.error(
-"LOAD PROFILE EXCEPTION:",
+"PROFILE EXCEPTION:",
 error
 );
 
-}
+return false;
 
 }
 
+}
+
+
+/* =====================================================
+   SELECT OPTION
+===================================================== */
 
 function selectOption(option){
 
@@ -1344,9 +1819,11 @@ option;
 
 document
 .querySelectorAll(".option")
-.forEach(el=>{
-el.classList.remove("selected");
-});
+.forEach(
+element=>{
+element.classList.remove("selected");
+}
+);
 
 
 if(option==="LE7"){
@@ -1375,8 +1852,18 @@ document
 
 }
 
+
+document
+.getElementById("gameResult")
+.textContent =
+"";
+
 }
 
+
+/* =====================================================
+   ROLL DICE
+===================================================== */
 
 function rollDice(){
 
@@ -1387,31 +1874,48 @@ Math.random()*6
 }
 
 
+/* =====================================================
+   WIN CHECK
+===================================================== */
+
 function isWinner(total){
 
 if(selectedOption==="LE7"){
+
 return total<=7;
+
 }
+
 
 if(selectedOption==="GT7"){
+
 return total>7;
+
 }
 
+
 if(selectedOption==="EVEN"){
+
 return total%2===0;
+
 }
+
 
 return false;
 
 }
 
 
+/* =====================================================
+   PLAY GAME
+===================================================== */
+
 async function playGame(){
 
 if(!currentUser){
 
 alert(
-"প্রথমে Login করুন"
+"প্রথমে Login করুন।"
 );
 
 return;
@@ -1422,13 +1926,27 @@ return;
 if(!selectedOption){
 
 alert(
-"একটি Option নির্বাচন করুন"
+"একটি Option নির্বাচন করুন।"
 );
 
 return;
 
 }
 
+
+const button =
+document.getElementById(
+"rollButton"
+);
+
+
+button.disabled = true;
+
+button.textContent =
+"🎲 Rolling...";
+
+
+try{
 
 const dice1 =
 rollDice();
@@ -1443,10 +1961,18 @@ const win =
 isWinner(total);
 
 const change =
-win ? 10 : -5;
+win
+?
+10
+:
+-5;
 
 const result =
-win ? "WIN" : "LOSS";
+win
+?
+"WIN"
+:
+"LOSS";
 
 
 document
@@ -1468,7 +1994,9 @@ total;
 
 
 const resultBox =
-document.getElementById("gameResult");
+document.getElementById(
+"gameResult"
+);
 
 
 resultBox.textContent =
@@ -1487,15 +2015,23 @@ win
 "result loss";
 
 
-const {
-data:profile,
-error:profileError
-} =
+/*
+   Current points database থেকে পড়া
+*/
+
+const profileResult =
 await supabaseClient
 .from("profiles")
 .select("points")
 .eq("id",currentUser.id)
 .single();
+
+
+const profile =
+profileResult.data;
+
+const profileError =
+profileResult.error;
 
 
 if(profileError){
@@ -1515,7 +2051,7 @@ return;
 
 
 const oldPoints =
-profile.points || 0;
+Number(profile.points || 0);
 
 
 const newPoints =
@@ -1525,9 +2061,11 @@ oldPoints + change
 );
 
 
-const {
-error:updateError
-} =
+/*
+   Update points
+*/
+
+const updateResult =
 await supabaseClient
 .from("profiles")
 .update({
@@ -1536,15 +2074,17 @@ points:newPoints
 .eq("id",currentUser.id);
 
 
-if(updateError){
+if(updateResult.error){
 
 console.error(
 "POINT UPDATE ERROR:",
-updateError
+updateResult.error
 );
 
 alert(
-translateError(updateError)
+translateError(
+updateResult.error
+)
 );
 
 return;
@@ -1552,9 +2092,11 @@ return;
 }
 
 
-const {
-error:gameError
-} =
+/*
+   Game save
+*/
+
+const gameResult =
 await supabaseClient
 .from("games")
 .insert({
@@ -1578,19 +2120,21 @@ points_change:change
 });
 
 
-if(gameError){
+if(gameResult.error){
 
 console.error(
 "GAME INSERT ERROR:",
-gameError
+gameResult.error
 );
 
 }
 
 
-const {
-error:historyError
-} =
+/*
+   Point History
+*/
+
+const historyResult =
 await supabaseClient
 .from("point_history")
 .insert({
@@ -1613,15 +2157,19 @@ description:
 });
 
 
-if(historyError){
+if(historyResult.error){
 
 console.error(
 "HISTORY INSERT ERROR:",
-historyError
+historyResult.error
 );
 
 }
 
+
+/*
+   UI points
+*/
 
 document
 .getElementById("userPoints")
@@ -1629,27 +2177,86 @@ document
 newPoints;
 
 
-await loadStatistics();
+/*
+   Update profile
+*/
 
-await loadHistory();
+if(currentProfile){
+
+currentProfile.points =
+newPoints;
 
 }
 
 
+/*
+   Reload
+*/
+
+await loadStatistics();
+
+await loadHistory();
+
+
+}catch(error){
+
+console.error(
+"PLAY GAME ERROR:",
+error
+);
+
+alert(
+translateError(error)
+);
+
+}finally{
+
+button.disabled = false;
+
+button.textContent =
+"🎲 Dice Roll";
+
+}
+
+}
+
+
+/* =====================================================
+   STATISTICS
+===================================================== */
+
 async function loadStatistics(){
 
 const box =
-document.getElementById("statistics");
+document.getElementById(
+"statistics"
+);
 
 
-const {
-data,
-error
-} =
+if(!supabaseClient){
+
+box.innerHTML =
+"<div>Supabase Connection নেই।</div>";
+
+return;
+
+}
+
+
+try{
+
+const result =
 await supabaseClient
 .from("dice_statistics_view")
 .select("*")
 .order("total");
+
+
+const data =
+result.data;
+
+const error =
+result.error;
 
 
 if(error){
@@ -1660,17 +2267,20 @@ error
 );
 
 box.innerHTML =
-"<div>Statistics পাওয়া যাচ্ছে না</div>";
+"<div class='empty'>Statistics পাওয়া যাচ্ছে না।</div>";
 
 return;
 
 }
 
 
-if(!data || data.length===0){
+if(
+!data ||
+data.length===0
+){
 
 box.innerHTML =
-"<div>এখনো কোনো Game নেই</div>";
+"<div class='empty'>এখনো কোনো Game নেই।</div>";
 
 return;
 
@@ -1678,68 +2288,107 @@ return;
 
 
 box.innerHTML =
-data.map(item=>`
+data.map(
+item=>`
 
 <div class="stat">
 
 <span>
-Total ${item.total}
+Total ${escapeHtml(item.total)}
 </span>
 
 <strong>
-${item.frequency}
+${escapeHtml(item.frequency)}
 </strong>
 
 </div>
 
-`).join("");
+`
+).join("");
+
+
+}catch(error){
+
+console.error(
+"STATISTICS EXCEPTION:",
+error
+);
+
+box.innerHTML =
+"<div class='empty'>Statistics Error</div>";
+
+}
 
 }
 
 
+/* =====================================================
+   HISTORY
+===================================================== */
+
 async function loadHistory(){
 
-if(!currentUser)return;
+if(!currentUser){
+
+return;
+
+}
 
 
 const box =
-document.getElementById("history");
+document.getElementById(
+"history"
+);
 
 
-const {
-data,
-error
-} =
+try{
+
+const result =
 await supabaseClient
 .from("games")
 .select("*")
-.eq("user_id",currentUser.id)
+.eq(
+"user_id",
+currentUser.id
+)
 .order(
 "created_at",
-{ascending:false}
+{
+ascending:false
+}
 )
 .limit(20);
+
+
+const data =
+result.data;
+
+const error =
+result.error;
 
 
 if(error){
 
 console.error(
-"HISTORY LOAD ERROR:",
+"HISTORY ERROR:",
 error
 );
 
 box.innerHTML =
-"<div>History পাওয়া যাচ্ছে না</div>";
+"<div class='empty'>History পাওয়া যাচ্ছে না।</div>";
 
 return;
 
 }
 
 
-if(!data || data.length===0){
+if(
+!data ||
+data.length===0
+){
 
 box.innerHTML =
-"<div>এখনো কোনো Game খেলেননি</div>";
+"<div class='empty'>এখনো কোনো Game খেলেননি।</div>";
 
 return;
 
@@ -1747,18 +2396,39 @@ return;
 
 
 box.innerHTML =
-data.map(game=>{
+data.map(
+game=>{
 
-const option =
-game.selected_option==="LE7"
-?
-"৭ বা তার কম"
-:
-game.selected_option==="GT7"
-?
-"৭ এর বেশি"
-:
+let option =
 "জোড় সংখ্যা";
+
+
+if(game.selected_option==="LE7"){
+
+option =
+"৭ বা তার কম";
+
+}
+
+
+if(game.selected_option==="GT7"){
+
+option =
+"৭ এর বেশি";
+
+}
+
+
+const isWin =
+game.result==="WIN";
+
+
+const pointsText =
+isWin
+?
+"🎉 WIN +10"
+:
+"😔 LOSS -5";
 
 
 return `
@@ -1767,39 +2437,28 @@ return `
 
 <div>
 
-🎲 ${game.dice_1}
+🎲 ${escapeHtml(game.dice_1)}
 +
-${game.dice_2}
+${escapeHtml(game.dice_2)}
 =
-
 <strong>
-${game.total}
+${escapeHtml(game.total)}
 </strong>
 
 </div>
 
+
 <div class="small">
 
 নির্বাচন:
-${option}
+${escapeHtml(option)}
 
 </div>
 
-<div class="${
-game.result==="WIN"
-?
-"win"
-:
-"loss"
-}">
 
-${
-game.result==="WIN"
-?
-"🎉 WIN +10"
-:
-"😔 LOSS -5"
-}
+<div class="${isWin ? "win" : "loss"}">
+
+${pointsText}
 
 </div>
 
@@ -1807,23 +2466,47 @@ game.result==="WIN"
 
 `;
 
-}).join("");
+}
+).join("");
+
+
+}catch(error){
+
+console.error(
+"HISTORY EXCEPTION:",
+error
+);
+
+box.innerHTML =
+"<div class='empty'>History Error</div>";
+
+}
 
 }
 
 
+/* =====================================================
+   OPEN ADMIN
+===================================================== */
+
 function openAdmin(){
 
-if(!currentUser)return;
+if(!currentUser){
+
+return;
+
+}
 
 
-if(
-currentUser.id!==ADMIN_ID &&
-currentProfile?.role!=="admin"
-){
+const isAdmin =
+currentUser.id===ADMIN_ID ||
+currentProfile?.role==="admin";
+
+
+if(!isAdmin){
 
 alert(
-"আপনার Admin Access নেই"
+"❌ আপনার Admin Access নেই।"
 );
 
 return;
@@ -1846,6 +2529,10 @@ loadUsers();
 }
 
 
+/* =====================================================
+   CLOSE ADMIN
+===================================================== */
+
 function closeAdmin(){
 
 document
@@ -1860,20 +2547,42 @@ document
 }
 
 
+/* =====================================================
+   LOAD USERS
+===================================================== */
+
 async function loadUsers(){
 
 const box =
-document.getElementById("usersList");
+document.getElementById(
+"usersList"
+);
 
 
 box.innerHTML =
-'<div class="loading">Loading Users...</div>';
+"<div class='loading'>Loading Users...</div>";
 
 
-const {
-data,
-error
-} =
+if(!currentUser){
+
+return;
+
+}
+
+
+if(currentUser.id!==ADMIN_ID){
+
+box.innerHTML =
+"<div class='empty'>Admin Access প্রয়োজন।</div>";
+
+return;
+
+}
+
+
+try{
+
+const result =
 await supabaseClient
 .from("profiles")
 .select(
@@ -1881,8 +2590,17 @@ await supabaseClient
 )
 .order(
 "created_at",
-{ascending:false}
+{
+ascending:false
+}
 );
+
+
+const data =
+result.data;
+
+const error =
+result.error;
 
 
 if(error){
@@ -1893,17 +2611,27 @@ error
 );
 
 box.innerHTML =
-"<div>User load করা যাচ্ছে না</div>";
+`
+<div class="empty">
+User load করা যাচ্ছে না।<br><br>
+${escapeHtml(
+translateError(error)
+)}
+</div>
+`;
 
 return;
 
 }
 
 
-if(!data || data.length===0){
+if(
+!data ||
+data.length===0
+){
 
 box.innerHTML =
-"<div>কোনো User নেই</div>";
+"<div class='empty'>কোনো User নেই।</div>";
 
 return;
 
@@ -1911,19 +2639,22 @@ return;
 
 
 box.innerHTML =
-data.map(user=>`
+data.map(
+user=>`
 
 <div class="history">
 
 <div>
 
 <strong>
-👤 ${escapeHtml(
+👤
+${escapeHtml(
 user.name || "User"
 )}
 </strong>
 
 </div>
+
 
 <div class="small">
 
@@ -1933,21 +2664,26 @@ user.email || ""
 
 </div>
 
+
 <div class="small">
 
 Points:
 <strong>
-${user.points || 0}
+${Number(user.points || 0)}
 </strong>
 
 </div>
 
+
 <div class="small">
 
 Role:
-${user.role || "user"}
+${escapeHtml(
+user.role || "user"
+)}
 
 </div>
+
 
 ${
 user.id!==ADMIN_ID
@@ -1958,7 +2694,7 @@ user.id!==ADMIN_ID
 class="gold"
 onclick="addPoints(
 '${user.id}',
-${user.points || 0}
+${Number(user.points || 0)}
 )"
 >
 ➕ Points যোগ করুন
@@ -1966,15 +2702,40 @@ ${user.points || 0}
 
 `
 :
-""
+`
+
+<div class="small">
+👑 Main Admin
+</div>
+
+`
+
 }
 
 </div>
 
-`).join("");
+`
+).join("");
+
+
+}catch(error){
+
+console.error(
+"LOAD USERS EXCEPTION:",
+error
+);
+
+box.innerHTML =
+"<div class='empty'>User Load Error</div>";
 
 }
 
+}
+
+
+/* =====================================================
+   ADD POINTS
+===================================================== */
 
 async function addPoints(
 userId,
@@ -1987,7 +2748,7 @@ currentUser.id!==ADMIN_ID
 ){
 
 alert(
-"Admin Access প্রয়োজন"
+"❌ Admin Access প্রয়োজন।"
 );
 
 return;
@@ -1998,15 +2759,23 @@ return;
 const value =
 prompt(
 `বর্তমান Points: ${currentPoints}
-কত Points যোগ করবেন?`
+
+কত Virtual Points যোগ করবেন?`
 );
 
 
-if(value===null)return;
+if(value===null){
+
+return;
+
+}
 
 
 const amount =
-parseInt(value);
+parseInt(
+value,
+10
+);
 
 
 if(
@@ -2015,7 +2784,7 @@ amount<=0
 ){
 
 alert(
-"সঠিক Points লিখুন"
+"⚠️ সঠিক Points লিখুন।"
 );
 
 return;
@@ -2024,29 +2793,38 @@ return;
 
 
 const newPoints =
-currentPoints + amount;
+Number(currentPoints)
++
+amount;
 
 
-const {
-error
-} =
+try{
+
+const updateResult =
 await supabaseClient
 .from("profiles")
 .update({
+
 points:newPoints
+
 })
-.eq("id",userId);
+.eq(
+"id",
+userId
+);
 
 
-if(error){
+if(updateResult.error){
 
 console.error(
 "ADMIN POINT ERROR:",
-error
+updateResult.error
 );
 
 alert(
-translateError(error)
+translateError(
+updateResult.error
+)
 );
 
 return;
@@ -2054,9 +2832,11 @@ return;
 }
 
 
-const {
-error:historyError
-} =
+/*
+   Point history
+*/
+
+const historyResult =
 await supabaseClient
 .from("point_history")
 .insert({
@@ -2073,45 +2853,68 @@ description:
 });
 
 
-if(historyError){
+if(historyResult.error){
 
 console.error(
 "ADMIN HISTORY ERROR:",
-historyError
+historyResult.error
 );
 
 }
 
 
 alert(
-"✅ Points সফলভাবে যোগ হয়েছে"
+"✅ Points সফলভাবে যোগ হয়েছে।"
 );
 
 
 await loadUsers();
 
+
+}catch(error){
+
+console.error(
+"ADD POINT EXCEPTION:",
+error
+);
+
+alert(
+translateError(error)
+);
+
 }
 
+}
+
+
+/* =====================================================
+   ESCAPE HTML
+===================================================== */
 
 function escapeHtml(text){
 
 return String(text)
+
 .replace(
 /&/g,
 "&amp;"
 )
+
 .replace(
 /</g,
 "&lt;"
 )
+
 .replace(
 />/g,
 "&gt;"
 )
+
 .replace(
 /"/g,
 "&quot;"
 )
+
 .replace(
 /'/g,
 "&#039;"
@@ -2120,84 +2923,36 @@ return String(text)
 }
 
 
-async function testConnection(){
+/* =====================================================
+   CHECK SESSION
+===================================================== */
 
-const status =
-document.getElementById(
-"connectionStatus"
-);
+async function checkSession(){
 
-
-try{
-
-const {
-data,
-error
-} =
-await supabaseClient.auth.getSession();
-
-
-console.log(
-"SUPABASE CONNECTION:",
-data
-);
-
-console.log(
-"SUPABASE CONNECTION ERROR:",
-error
-);
-
-
-if(error){
-
-status.textContent =
-"❌ Supabase Connection Error";
+if(!supabaseClient){
 
 return;
 
 }
 
 
-status.textContent =
-"✅ Supabase Connected";
-
-}catch(error){
-
-console.error(
-"CONNECTION ERROR:",
-error
-);
-
-status.textContent =
-"❌ Supabase Connection Failed";
-
-}
-
-}
-
-
-async function checkSession(){
-
 try{
 
-const {
-data,
-error
-} =
+const result =
 await supabaseClient.auth.getSession();
 
 
 console.log(
 "CURRENT SESSION:",
-data
+result
 );
 
 
-if(error){
+if(result.error){
 
 console.error(
 "SESSION ERROR:",
-error
+result.error
 );
 
 showLogin();
@@ -2207,10 +2962,14 @@ return;
 }
 
 
-if(data.session){
+const session =
+result.data?.session;
+
+
+if(session){
 
 currentUser =
-data.session.user;
+session.user;
 
 await loadApp();
 
@@ -2230,6 +2989,19 @@ error
 showLogin();
 
 }
+
+}
+
+
+/* =====================================================
+   AUTH STATE CHANGE
+===================================================== */
+
+function setupAuthListener(){
+
+if(!supabaseClient){
+
+return;
 
 }
 
@@ -2257,12 +3029,20 @@ currentUser = null;
 }
 );
 
+}
+
+
+/* =====================================================
+   ENTER KEY
+===================================================== */
 
 document
-.getElementById("registerPassword")
+.getElementById(
+"registerPassword"
+)
 .addEventListener(
 "keydown",
-function(event){
+event=>{
 
 if(event.key==="Enter"){
 
@@ -2275,10 +3055,12 @@ registerUser();
 
 
 document
-.getElementById("loginPassword")
+.getElementById(
+"loginPassword"
+)
 .addEventListener(
 "keydown",
-function(event){
+event=>{
 
 if(event.key==="Enter"){
 
@@ -2290,9 +3072,32 @@ loginUser();
 );
 
 
-testConnection();
+/* =====================================================
+   START APPLICATION
+===================================================== */
 
-checkSession();
+(async function(){
+
+const initialized =
+initializeSupabase();
+
+
+if(!initialized){
+
+return;
+
+}
+
+
+setupAuthListener();
+
+
+await testConnection();
+
+
+await checkSession();
+
+})();
 
 </script>
 
