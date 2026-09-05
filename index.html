@@ -3,295 +3,50 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-
-<title>লুডু পয়েন্ট গেম</title>
-
+<title>Virtual Dice Game</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
 <style>
-*{
-box-sizing:border-box;
-margin:0;
-padding:0;
-}
-
-body{
-font-family:Arial,"Noto Sans Bengali",sans-serif;
-background:linear-gradient(135deg,#eef2ff,#f5f3ff);
-color:#172033;
-min-height:100vh;
-}
-
-.container{
-width:100%;
-max-width:900px;
-margin:auto;
-padding:15px;
-}
-
-header{
-background:linear-gradient(135deg,#4338ca,#7c3aed);
-color:#fff;
-padding:25px 18px;
-border-radius:20px;
-text-align:center;
-margin-bottom:18px;
-box-shadow:0 10px 30px rgba(67,56,202,.25);
-}
-
-header h1{
-font-size:28px;
-margin-bottom:8px;
-}
-
-.card{
-background:#fff;
-padding:20px;
-border-radius:18px;
-margin-bottom:16px;
-box-shadow:0 6px 25px rgba(0,0,0,.08);
-}
-
-.card h2{
-margin-bottom:15px;
-}
-
-.auth-grid{
-display:grid;
-grid-template-columns:1fr 1fr;
-gap:16px;
-}
-
-input{
-width:100%;
-padding:13px;
-margin:6px 0;
-border:1px solid #d1d5db;
-border-radius:10px;
-font-size:16px;
-outline:none;
-}
-
-input:focus{
-border-color:#4f46e5;
-}
-
-button{
-border:0;
-background:#4f46e5;
-color:#fff;
-padding:12px 16px;
-border-radius:10px;
-cursor:pointer;
-font-weight:bold;
-margin:5px;
-font-size:15px;
-}
-
-button:hover{
-opacity:.9;
-}
-
-button:disabled{
-opacity:.6;
-cursor:not-allowed;
-}
-
-.hidden{
-display:none!important;
-}
-
-.topbar{
-background:#fff;
-padding:15px;
-border-radius:15px;
-margin-bottom:16px;
-display:flex;
-justify-content:space-between;
-align-items:center;
-gap:10px;
-box-shadow:0 5px 20px rgba(0,0,0,.07);
-}
-
-.user-info{
-display:flex;
-flex-direction:column;
-gap:4px;
-}
-
-.point-box{
-background:#ecfdf5;
-color:#047857;
-padding:10px 15px;
-border-radius:12px;
-font-weight:bold;
-}
-
-.logout{
-background:#dc2626;
-}
-
-.game{
-text-align:center;
-}
-
-.dice-area{
-display:flex;
-justify-content:center;
-gap:20px;
-margin:20px 0;
-}
-
-.dice{
-width:90px;
-height:90px;
-display:flex;
-align-items:center;
-justify-content:center;
-border-radius:18px;
-border:3px solid #4f46e5;
-background:#f8fafc;
-font-size:42px;
-font-weight:bold;
-box-shadow:0 5px 15px rgba(0,0,0,.08);
-}
-
-.options{
-display:flex;
-justify-content:center;
-flex-wrap:wrap;
-margin:15px 0;
-}
-
-.option{
-background:#64748b;
-}
-
-.option.active{
-background:#059669;
-}
-
-.play{
-width:90%;
-max-width:400px;
-background:#059669;
-font-size:18px;
-padding:14px;
-}
-
-.selected-box{
-background:#f3f4f6;
-padding:12px;
-border-radius:10px;
-margin:12px 0;
-}
-
-.result{
-min-height:30px;
-margin-top:15px;
-font-size:19px;
-font-weight:bold;
-}
-
-.win{
-color:#059669;
-}
-
-.lose{
-color:#dc2626;
-}
-
-.info{
-background:#eff6ff;
-padding:12px;
-border-radius:10px;
-margin-top:15px;
-color:#1e40af;
-font-size:14px;
-}
-
-.stats-grid{
-display:grid;
-grid-template-columns:repeat(3,1fr);
-gap:10px;
-}
-
-.stat{
-background:#f8fafc;
-padding:12px;
-border-radius:10px;
-text-align:center;
-border:1px solid #e5e7eb;
-}
-
-.history{
-max-height:400px;
-overflow-y:auto;
-}
-
-.history-item{
-background:#f8fafc;
-padding:12px;
-border-radius:10px;
-margin-bottom:8px;
-border-left:4px solid #4f46e5;
-}
-
-.empty{
-text-align:center;
-padding:20px;
-color:#6b7280;
-}
-
-.status{
-padding:10px;
-border-radius:10px;
-margin-bottom:12px;
-display:none;
-}
-
-.status.error{
-display:block;
-background:#fee2e2;
-color:#991b1b;
-}
-
-.status.success{
-display:block;
-background:#dcfce7;
-color:#166534;
-}
-
-@media(max-width:650px){
-
-.auth-grid{
-grid-template-columns:1fr;
-}
-
-.topbar{
-flex-direction:column;
-align-items:stretch;
-text-align:center;
-}
-
-.stats-grid{
-grid-template-columns:repeat(2,1fr);
-}
-
-header h1{
-font-size:23px;
-}
-
-.dice{
-width:75px;
-height:75px;
-font-size:34px;
-}
-
-.play{
-width:100%;
-}
-
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Arial,sans-serif;background:linear-gradient(135deg,#0f172a,#1e3a8a);min-height:100vh;color:#fff}
+.container{width:100%;max-width:520px;margin:auto;padding:20px}
+.logo{text-align:center;font-size:30px;font-weight:bold;margin:20px 0}
+.card{background:rgba(255,255,255,.09);border:1px solid rgba(255,255,255,.15);border-radius:20px;padding:20px;margin-bottom:18px;backdrop-filter:blur(12px)}
+h2{text-align:center;margin-bottom:18px}
+input{width:100%;padding:14px;margin-bottom:12px;border:0;border-radius:10px;font-size:16px;outline:none}
+button{width:100%;padding:14px;margin-top:8px;border:0;border-radius:10px;background:#22c55e;color:#fff;font-size:16px;font-weight:bold;cursor:pointer}
+button:hover{opacity:.9}
+.blue{background:#2563eb}
+.red{background:#dc2626}
+.gray{background:#475569}
+.gold{background:#d97706}
+.hidden{display:none!important}
+.switch{text-align:center;color:#93c5fd;margin-top:15px;cursor:pointer}
+.message{margin-top:12px;padding:10px;text-align:center;border-radius:8px;background:rgba(255,255,255,.1)}
+.profile{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.user-name{font-size:20px;font-weight:bold}
+.user-email{font-size:13px;color:#cbd5e1;margin-top:5px;word-break:break-all}
+.role{display:inline-block;margin-top:7px;padding:4px 9px;border-radius:20px;background:#2563eb;font-size:12px}
+.admin-role{background:#d97706}
+.points-box{text-align:center}
+.points{color:#4ade80;font-size:30px;font-weight:bold}
+.points-label{font-size:12px;color:#cbd5e1}
+.dice{display:flex;justify-content:center;gap:20px;margin:25px 0}
+.die{width:90px;height:90px;background:#fff;color:#111827;border-radius:18px;display:flex;align-items:center;justify-content:center;font-size:42px;font-weight:bold;box-shadow:0 8px 20px rgba(0,0,0,.25)}
+.total{text-align:center;font-size:22px;margin-bottom:20px}
+.options{display:grid;gap:10px}
+.option{background:#334155}
+.option.selected{background:#16a34a}
+.result{text-align:center;min-height:30px;margin-top:15px;font-size:20px;font-weight:bold}
+.win{color:#4ade80}
+.loss{color:#f87171}
+.stat{display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid rgba(255,255,255,.1)}
+.history{background:rgba(255,255,255,.06);padding:12px;border-radius:10px;margin-bottom:10px}
+.small{color:#cbd5e1;font-size:13px;margin-top:4px}
+.loading{text-align:center;padding:15px}
+.admin-button{background:#d97706}
+.warning{background:rgba(245,158,11,.15);padding:12px;border-radius:10px;text-align:center;margin-bottom:15px;color:#fde68a}
+@media(max-width:400px){
+.die{width:70px;height:70px;font-size:32px}
 }
 </style>
 </head>
@@ -300,326 +55,275 @@ width:100%;
 
 <div class="container">
 
-<header>
-<h1>🎲 লুডু পয়েন্ট গেম</h1>
-<p>ফ্রি Virtual Points Game</p>
-</header>
+<div class="logo">
+🎲 Virtual Dice Game
+</div>
 
-<div id="status" class="status"></div>
+<div id="authSection">
 
-<section id="authSection">
+<div id="registerBox" class="card">
 
-<div class="auth-grid">
+<h2>📝 Register</h2>
+
+<input id="registerName" type="text" placeholder="আপনার নাম">
+
+<input id="registerEmail" type="email" placeholder="Email">
+
+<input id="registerPassword" type="password" placeholder="Password">
+
+<button onclick="registerUser()">Register</button>
+
+<div class="switch" onclick="showLogin()">
+আগে Account আছে? Login করুন
+</div>
+
+<div id="registerMessage" class="message hidden"></div>
+
+</div>
+
+<div id="loginBox" class="card hidden">
+
+<h2>🔐 Login</h2>
+
+<input id="loginEmail" type="email" placeholder="Email">
+
+<input id="loginPassword" type="password" placeholder="Password">
+
+<button class="blue" onclick="loginUser()">Login</button>
+
+<div class="switch" onclick="showRegister()">
+নতুন Account তৈরি করুন
+</div>
+
+<div id="loginMessage" class="message hidden"></div>
+
+</div>
+
+</div>
+
+
+<div id="appSection" class="hidden">
 
 <div class="card">
 
-<h2>📝 রেজিস্ট্রেশন</h2>
+<div class="profile">
 
-<input
-id="regName"
-type="text"
-placeholder="আপনার নাম"
->
+<div>
 
-<input
-id="regEmail"
-type="email"
-placeholder="ইমেইল"
->
+<div id="userName" class="user-name">
+User
+</div>
 
-<input
-id="regPassword"
-type="password"
-placeholder="পাসওয়ার্ড"
->
+<div id="userEmail" class="user-email"></div>
 
-<button onclick="registerUser()">
-অ্যাকাউন্ট তৈরি করুন
+<div id="userRole" class="role">
+User
+</div>
+
+</div>
+
+<div class="points-box">
+
+<div id="userPoints" class="points">
+0
+</div>
+
+<div class="points-label">
+Virtual Points
+</div>
+
+</div>
+
+</div>
+
+<button id="adminButton" class="admin-button hidden" onclick="openAdmin()">
+👑 Admin Panel
 </button>
 
-</div>
-
-<div class="card">
-
-<h2>🔐 লগইন</h2>
-
-<input
-id="loginEmail"
-type="email"
-placeholder="ইমেইল"
->
-
-<input
-id="loginPassword"
-type="password"
-placeholder="পাসওয়ার্ড"
->
-
-<button onclick="loginUser()">
-লগইন
-</button>
-
-</div>
-
-</div>
-
-</section>
-
-<section id="appSection" class="hidden">
-
-<div class="topbar">
-
-<div class="user-info">
-
-<span>
-👤 <b id="userName">User</b>
-</span>
-
-<span id="userEmail"></span>
-
-</div>
-
-<div class="point-box">
-
-⭐ পয়েন্ট:
-<span id="userPoints">0</span>
-
-</div>
-
-<button
-class="logout"
-onclick="logoutUser()"
->
+<button class="red" onclick="logoutUser()">
 Logout
 </button>
 
 </div>
 
-<div class="card game">
 
-<h2>🎲 ডাইস গেম</h2>
+<div id="gameSection">
 
-<p>
-দুটি ডাইস চালিয়ে মোট সংখ্যা নির্ধারণ হবে।
-</p>
+<div class="card">
 
-<div class="dice-area">
+<h2>🎲 Dice Game</h2>
 
-<div
-id="dice1"
-class="dice"
->
-?
+<div class="warning">
+এটি শুধুমাত্র Virtual Points Game
 </div>
 
-<div
-id="dice2"
-class="dice"
->
-?
-</div>
+<div class="dice">
+
+<div id="dice1" class="die">?</div>
+
+<div id="dice2" class="die">?</div>
 
 </div>
 
-<div class="selected-box">
-
-নির্বাচিত অপশন:
-
-<b id="selectedOption">
-কিছুই নির্বাচন করা হয়নি
-</b>
-
+<div class="total">
+Total:
+<strong id="diceTotal">-</strong>
 </div>
 
 <div class="options">
 
-<button
-id="optionLE7"
-class="option"
-onclick="selectOption('LE7')"
->
-৭ বা কম
+<button id="optionLE7" class="option" onclick="selectOption('LE7')">
+৭ বা তার কম
 </button>
 
-<button
-id="optionGT7"
-class="option"
-onclick="selectOption('GT7')"
->
-৭-এর বেশি
+<button id="optionGT7" class="option" onclick="selectOption('GT7')">
+৭ এর বেশি
 </button>
 
-<button
-id="optionEVEN"
-class="option"
-onclick="selectOption('EVEN')"
->
+<button id="optionEVEN" class="option" onclick="selectOption('EVEN')">
 জোড় সংখ্যা
 </button>
 
 </div>
 
-<button
-id="playButton"
-class="play"
-onclick="playGame()"
->
-🎯 ডাইস চালান
+<button class="blue" onclick="playGame()">
+🎲 Dice Roll
 </button>
 
-<div
-id="result"
-class="result"
-></div>
+<div id="gameResult" class="result"></div>
 
-<div class="info">
-জয় হলে +১০ Virtual Points এবং হারলে ৫ Virtual Points কমবে।
 </div>
+
+
+<div class="card">
+
+<h2>📊 Dice Statistics</h2>
+
+<div id="statistics">
+<div class="loading">Loading...</div>
+</div>
+
+</div>
+
+
+<div class="card">
+
+<h2>📜 আমার Game History</h2>
+
+<div id="history">
+<div class="loading">Loading...</div>
+</div>
+
+</div>
+
+</div>
+
+
+<div id="adminSection" class="hidden">
+
+<div class="card">
+
+<h2>👑 Admin Panel</h2>
+
+<div class="warning">
+Admin Access
+</div>
+
+<button class="gray" onclick="closeAdmin()">
+🎲 Game এ ফিরে যান
+</button>
 
 </div>
 
 <div class="card">
 
-<h2>📊 ডাইস পরিসংখ্যান</h2>
+<h2>👥 User Management</h2>
 
-<div
-id="stats"
-class="stats-grid"
->
+<div id="usersList">
+<div class="loading">Loading...</div>
 </div>
 
 </div>
 
-<div class="card">
-
-<h2>📜 আমার গেম ইতিহাস</h2>
-
-<div
-id="history"
-class="history"
->
 </div>
 
 </div>
 
-</section>
-
 </div>
+
 
 <script>
 
-const SUPABASE_URL =
-"https://mulroqtysdawwdrpdxtx.supabase.co";
+const SUPABASE_URL="https://mulroqtysdawwdrpdxtx.supabase.co";
 
-const SUPABASE_ANON_KEY =
-"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im11bHJvcXR5c2Rhd3d2ZHJwZHh0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODg2MTI4NDEsImV4cCI6MjEwNDE4ODg0MX0.4IyzSSPea7-zJcenzeqo43gN7XCeEqFvBnOptz25Zx0";
+const SUPABASE_PUBLISHABLE_KEY="sb_publishable_-v7fU5dwzz0LddbM-f87PQ_-L1BH-bl";
 
-const db =
-supabase.createClient(
+const ADMIN_ID="95b9a85a-c30b-4111-b688-20abde0d3236";
+
+const supabase=window.supabase.createClient(
 SUPABASE_URL,
-SUPABASE_ANON_KEY
+SUPABASE_PUBLISHABLE_KEY
 );
 
-let currentUser = null;
-let currentProfile = null;
-let selectedOption = null;
+let currentUser=null;
+let selectedOption=null;
+let currentProfile=null;
 
 
-function message(text,type="error"){
+function showLogin(){
 
-const box =
-document.getElementById("status");
-
-box.textContent = text;
-
-box.className =
-"status " + type;
-
-setTimeout(()=>{
-
-box.className="status";
-
-},5000);
+document.getElementById("registerBox").classList.add("hidden");
+document.getElementById("loginBox").classList.remove("hidden");
 
 }
 
 
-function showAuth(){
+function showRegister(){
 
-document
-.getElementById("authSection")
-.classList.remove("hidden");
-
-document
-.getElementById("appSection")
-.classList.add("hidden");
+document.getElementById("loginBox").classList.add("hidden");
+document.getElementById("registerBox").classList.remove("hidden");
 
 }
 
 
-function showApp(){
+function message(id,text){
 
-document
-.getElementById("authSection")
-.classList.add("hidden");
+const el=document.getElementById(id);
 
-document
-.getElementById("appSection")
-.classList.remove("hidden");
+el.textContent=text;
+
+el.classList.remove("hidden");
 
 }
 
 
 async function registerUser(){
 
-const name =
-document
-.getElementById("regName")
-.value
-.trim();
+const name=document.getElementById("registerName").value.trim();
 
-const email =
-document
-.getElementById("regEmail")
-.value
-.trim();
+const email=document.getElementById("registerEmail").value.trim();
 
-const password =
-document
-.getElementById("regPassword")
-.value;
+const password=document.getElementById("registerPassword").value;
 
-if(!name){
+if(!name||!email||!password){
 
-message("আপনার নাম দিন");
+message("registerMessage","সব তথ্য পূরণ করুন");
 
 return;
 
 }
 
-if(!email){
+if(password.length<6){
 
-message("ইমেইল দিন");
-
-return;
-
-}
-
-if(password.length < 6){
-
-message(
-"পাসওয়ার্ড কমপক্ষে ৬ অক্ষরের হতে হবে"
-);
+message("registerMessage","Password কমপক্ষে ৬ অক্ষরের হতে হবে");
 
 return;
 
 }
 
-const {
-data,
-error
-} =
-await db.auth.signUp({
+message("registerMessage","Account তৈরি হচ্ছে...");
+
+const {data,error}=await supabase.auth.signUp({
 
 email:email,
 
@@ -635,25 +339,34 @@ name:name
 
 if(error){
 
-message(error.message);
+message("registerMessage",error.message);
 
 return;
 
 }
 
+if(data.user){
+
+document.getElementById("registerName").value="";
+document.getElementById("registerEmail").value="";
+document.getElementById("registerPassword").value="";
+
 if(data.session){
 
-message(
-"রেজিস্ট্রেশন সফল হয়েছে।",
-"success"
-);
+currentUser=data.user;
+
+await loadApp();
 
 }else{
 
+showLogin();
+
 message(
-"রেজিস্ট্রেশন সফল। ইমেইল verification প্রয়োজন হলে ইমেইল যাচাই করুন।",
-"success"
+"loginMessage",
+"Registration সফল হয়েছে। Email verify করে Login করুন।"
 );
+
+}
 
 }
 
@@ -662,32 +375,21 @@ message(
 
 async function loginUser(){
 
-const email =
-document
-.getElementById("loginEmail")
-.value
-.trim();
+const email=document.getElementById("loginEmail").value.trim();
 
-const password =
-document
-.getElementById("loginPassword")
-.value;
+const password=document.getElementById("loginPassword").value;
 
-if(!email || !password){
+if(!email||!password){
 
-message(
-"ইমেইল এবং পাসওয়ার্ড দিন"
-);
+message("loginMessage","Email এবং Password দিন");
 
 return;
 
 }
 
-const {
-data,
-error
-} =
-await db.auth.signInWithPassword({
+message("loginMessage","Login হচ্ছে...");
+
+const {data,error}=await supabase.auth.signInWithPassword({
 
 email:email,
 
@@ -697,133 +399,178 @@ password:password
 
 if(error){
 
-message(error.message);
+message("loginMessage",error.message);
 
 return;
 
 }
 
-currentUser =
-data.user;
+currentUser=data.user;
+
+await loadApp();
+
+}
+
+
+async function logoutUser(){
+
+await supabase.auth.signOut();
+
+currentUser=null;
+currentProfile=null;
+
+document.getElementById("appSection").classList.add("hidden");
+
+document.getElementById("authSection").classList.remove("hidden");
+
+document.getElementById("adminSection").classList.add("hidden");
+
+document.getElementById("gameSection").classList.remove("hidden");
+
+showLogin();
+
+}
+
+
+async function loadApp(){
+
+document.getElementById("authSection").classList.add("hidden");
+
+document.getElementById("appSection").classList.remove("hidden");
+
+document.getElementById("adminSection").classList.add("hidden");
+
+document.getElementById("gameSection").classList.remove("hidden");
 
 await loadProfile();
 
-}
-
-
-async function loadProfile(){
-
-const {
-data,
-error
-} =
-await db
-.from("profiles")
-.select("*")
-.eq(
-"id",
-currentUser.id
-)
-.single();
-
-if(error){
-
-message(
-"Profile পাওয়া যায়নি: " +
-error.message
-);
-
-return;
-
-}
-
-currentProfile =
-data;
-
-document
-.getElementById("userName")
-.textContent =
-data.name;
-
-document
-.getElementById("userEmail")
-.textContent =
-data.email ||
-currentUser.email;
-
-updatePoints();
-
-showApp();
-
-await loadStats();
+await loadStatistics();
 
 await loadHistory();
 
 }
 
 
-function updatePoints(){
+async function loadProfile(){
 
-document
-.getElementById("userPoints")
-.textContent =
-Number(currentProfile.points || 0);
+if(!currentUser)return;
+
+let {data,error}=await supabase
+.from("profiles")
+.select("*")
+.eq("id",currentUser.id)
+.maybeSingle();
+
+if(error){
+
+console.log(error);
+
+return;
+
+}
+
+if(!data){
+
+const result=await supabase
+.from("profiles")
+.insert({
+
+id:currentUser.id,
+
+name:currentUser.user_metadata?.name||"User",
+
+email:currentUser.email,
+
+points:0,
+
+role:currentUser.id===ADMIN_ID?"admin":"user"
+
+})
+.select()
+.single();
+
+data=result.data;
+
+}
+
+if(!data)return;
+
+currentProfile=data;
+
+document.getElementById("userName").textContent=data.name||"User";
+
+document.getElementById("userEmail").textContent=data.email||currentUser.email;
+
+document.getElementById("userPoints").textContent=data.points||0;
+
+const roleElement=document.getElementById("userRole");
+
+if(data.role==="admin"||currentUser.id===ADMIN_ID){
+
+roleElement.textContent="👑 Admin";
+
+roleElement.className="role admin-role";
+
+document.getElementById("adminButton").classList.remove("hidden");
+
+}else{
+
+roleElement.textContent="User";
+
+roleElement.className="role";
+
+document.getElementById("adminButton").classList.add("hidden");
+
+}
 
 }
 
 
 function selectOption(option){
 
-selectedOption =
-option;
+selectedOption=option;
 
-document
-.querySelectorAll(".option")
-.forEach(button=>{
-button.classList.remove("active");
+document.querySelectorAll(".option").forEach(el=>{
+el.classList.remove("selected");
 });
 
-let id;
-
-if(option === "LE7"){
-id="optionLE7";
+if(option==="LE7"){
+document.getElementById("optionLE7").classList.add("selected");
 }
 
-if(option === "GT7"){
-id="optionGT7";
+if(option==="GT7"){
+document.getElementById("optionGT7").classList.add("selected");
 }
 
-if(option === "EVEN"){
-id="optionEVEN";
+if(option==="EVEN"){
+document.getElementById("optionEVEN").classList.add("selected");
 }
-
-document
-.getElementById(id)
-.classList.add("active");
-
-const names={
-
-LE7:"৭ বা কম",
-
-GT7:"৭-এর বেশি",
-
-EVEN:"জোড় সংখ্যা"
-
-};
-
-document
-.getElementById("selectedOption")
-.textContent =
-names[option];
 
 }
 
 
-function randomDice(){
+function rollDice(){
 
-return Math.floor(
-Math.random()*6
-)+1;
+return Math.floor(Math.random()*6)+1;
+
+}
+
+
+function isWinner(total){
+
+if(selectedOption==="LE7"){
+return total<=7;
+}
+
+if(selectedOption==="GT7"){
+return total>7;
+}
+
+if(selectedOption==="EVEN"){
+return total%2===0;
+}
+
+return false;
 
 }
 
@@ -832,7 +579,7 @@ async function playGame(){
 
 if(!currentUser){
 
-message("আগে লগইন করুন");
+alert("প্রথমে Login করুন");
 
 return;
 
@@ -840,460 +587,451 @@ return;
 
 if(!selectedOption){
 
-message(
-"প্রথমে একটি অপশন নির্বাচন করুন"
-);
+alert("একটি Option নির্বাচন করুন");
 
 return;
 
 }
 
-const button =
-document
-.getElementById("playButton");
+const dice1=rollDice();
 
-button.disabled=true;
+const dice2=rollDice();
 
-document
-.getElementById("result")
-.className="result";
+const total=dice1+dice2;
 
-document
-.getElementById("result")
-.textContent="🎲 ডাইস চলছে...";
+const win=isWinner(total);
 
-const dice1 =
-randomDice();
+const change=win?10:-5;
 
-const dice2 =
-randomDice();
+const result=win?"WIN":"LOSS";
 
-const total =
-dice1+dice2;
+document.getElementById("dice1").textContent=dice1;
 
-document
-.getElementById("dice1")
-.textContent=dice1;
+document.getElementById("dice2").textContent=dice2;
 
-document
-.getElementById("dice2")
-.textContent=dice2;
+document.getElementById("diceTotal").textContent=total;
 
-let win=false;
+const resultBox=document.getElementById("gameResult");
 
-if(
-selectedOption === "LE7"
-){
-win =
-total <= 7;
+resultBox.textContent=win
+?"🎉 আপনি জিতেছেন! +10 Points"
+:"😔 আপনি হেরেছেন! -5 Points";
+
+resultBox.className=win
+?"result win"
+:"result loss";
+
+const {data:profile,error:profileError}=await supabase
+.from("profiles")
+.select("points")
+.eq("id",currentUser.id)
+.single();
+
+if(profileError){
+
+alert(profileError.message);
+
+return;
+
 }
 
-if(
-selectedOption === "GT7"
-){
-win =
-total > 7;
-}
+const oldPoints=profile.points||0;
 
-if(
-selectedOption === "EVEN"
-){
-win =
-total % 2 === 0;
-}
+const newPoints=Math.max(0,oldPoints+change);
 
-const pointsChange =
-win ? 10 : -5;
-
-const oldPoints =
-Number(
-currentProfile.points || 0
-);
-
-const newPoints =
-Math.max(
-0,
-oldPoints + pointsChange
-);
-
-const {
-error:updateError
-} =
-await db
+const {error:updateError}=await supabase
 .from("profiles")
 .update({
 points:newPoints
 })
-.eq(
-"id",
-currentUser.id
-);
+.eq("id",currentUser.id);
 
 if(updateError){
 
-message(
-"পয়েন্ট আপডেট হয়নি: " +
-updateError.message
-);
-
-button.disabled=false;
+alert(updateError.message);
 
 return;
 
 }
 
-const {
-error:gameError
-} =
-await db
+const {error:gameError}=await supabase
 .from("games")
 .insert({
 
-user_id:
-currentUser.id,
+user_id:currentUser.id,
 
-dice_1:
-dice1,
+dice_1:dice1,
 
-dice_2:
-dice2,
+dice_2:dice2,
 
-total:
-total,
+total:total,
 
-selected_option:
-selectedOption,
+selected_option:selectedOption,
 
-result:
-win
-?"win"
-:"loss",
+result:result,
 
-points_change:
-pointsChange
+points_change:change
 
 });
 
 if(gameError){
 
-await db
-.from("profiles")
-.update({
-points:oldPoints
-})
-.eq(
-"id",
-currentUser.id
-);
-
-message(
-"গেম সংরক্ষণ হয়নি: " +
-gameError.message
-);
-
-button.disabled=false;
-
-return;
+console.log(gameError);
 
 }
 
-await db
+const {error:historyError}=await supabase
 .from("point_history")
 .insert({
 
-user_id:
-currentUser.id,
+user_id:currentUser.id,
 
-points:
-pointsChange,
+points:change,
 
-type:
-win
-?"game_win"
-:"game_loss",
+type:win?"game_win":"game_loss",
 
-description:
-`Dice ${dice1}+${dice2} = ${total}`
+description:`Dice ${dice1}+${dice2}=${total}`
 
 });
 
-currentProfile.points =
-newPoints;
+if(historyError){
 
-updatePoints();
-
-const result =
-document
-.getElementById("result");
-
-if(win){
-
-result.className =
-"result win";
-
-result.textContent =
-`🎉 আপনি জয়ী! +${pointsChange} পয়েন্ট`;
-
-}else{
-
-result.className =
-"result lose";
-
-result.textContent =
-`😔 আপনি হেরেছেন। ${pointsChange} পয়েন্ট`;
+console.log(historyError);
 
 }
 
-await loadStats();
+document.getElementById("userPoints").textContent=newPoints;
+
+await loadStatistics();
 
 await loadHistory();
 
-button.disabled=false;
-
 }
 
 
-async function loadStats(){
+async function loadStatistics(){
 
-const stats =
-document
-.getElementById("stats");
-
-const {
-data,
-error
-} =
-await db
+const {data,error}=await supabase
 .from("dice_statistics_view")
 .select("*")
-.order(
-"total",
-{
-ascending:true
-}
-);
+.order("total");
+
+const box=document.getElementById("statistics");
 
 if(error){
 
-stats.innerHTML =
-`
-<div class="empty">
-পরিসংখ্যান পাওয়া যাচ্ছে না
-</div>
-`;
+box.innerHTML="<div>Statistics পাওয়া যাচ্ছে না</div>";
 
 return;
 
 }
 
-const totals={};
+if(!data||data.length===0){
 
-for(
-let i=2;
-i<=12;
-i++
-){
+box.innerHTML="<div>এখনো কোনো Game নেই</div>";
 
-totals[i]=0;
+return;
 
 }
 
-(data || []).forEach(item=>{
+box.innerHTML=data.map(item=>`
 
-totals[item.total] =
-Number(item.count);
-
-});
-
-stats.innerHTML =
-Object
-.keys(totals)
-.map(total=>{
-
-return `
 <div class="stat">
 
-<div>🎲 ${total}</div>
+<span>Total ${item.total}</span>
 
-<strong>
-${totals[total]} বার
-</strong>
+<strong>${item.frequency}</strong>
 
 </div>
-`;
 
-})
-.join("");
+`).join("");
 
 }
 
 
 async function loadHistory(){
 
-const history =
-document
-.getElementById("history");
+if(!currentUser)return;
 
-const {
-data,
-error
-} =
-await db
+const box=document.getElementById("history");
+
+const {data,error}=await supabase
 .from("games")
 .select("*")
-.eq(
-"user_id",
-currentUser.id
-)
-.order(
-"created_at",
-{
-ascending:false
-}
-)
-.limit(50);
+.eq("user_id",currentUser.id)
+.order("created_at",{ascending:false})
+.limit(20);
 
 if(error){
 
-history.innerHTML =
-`
-<div class="empty">
-History পাওয়া যাচ্ছে না
-</div>
-`;
+box.innerHTML="<div>History পাওয়া যাচ্ছে না</div>";
 
 return;
 
 }
 
-if(!data || data.length===0){
+if(!data||data.length===0){
 
-history.innerHTML =
-`
-<div class="empty">
-এখনো কোনো গেম খেলা হয়নি
-</div>
-`;
+box.innerHTML="<div>এখনো কোনো Game খেলেননি</div>";
 
 return;
 
 }
 
-history.innerHTML =
-data
-.map(game=>{
+box.innerHTML=data.map(game=>{
 
-const date =
-new Date(
-game.created_at
-).toLocaleString(
-"bn-BD"
-);
-
-const status =
-game.result === "win"
-?"🎉 জয়"
-:"😔 হার";
-
-const change =
-game.points_change > 0
-? "+" + game.points_change
-: game.points_change;
+const option=
+game.selected_option==="LE7"
+?"৭ বা তার কম"
+:
+game.selected_option==="GT7"
+?"৭ এর বেশি"
+:
+"জোড় সংখ্যা";
 
 return `
-<div class="history-item">
 
-<b>${status}</b>
+<div class="history">
 
-<br>
+<div>
+🎲 ${game.dice_1} + ${game.dice_2} =
+<strong>${game.total}</strong>
+</div>
 
-🎲
-${game.dice_1}
-+
-${game.dice_2}
-=
-${game.total}
+<div class="small">
+নির্বাচন: ${option}
+</div>
 
-<br>
+<div class="${game.result==="WIN"?"win":"loss"}">
 
-⭐
-পয়েন্ট:
-${change}
-
-<br>
-
-<small>
-${date}
-</small>
+${game.result==="WIN"?"🎉 WIN +10":"😔 LOSS -5"}
 
 </div>
+
+</div>
+
 `;
 
-})
-.join("");
+}).join("");
 
 }
 
 
-async function logoutUser(){
+function openAdmin(){
 
-await db.auth.signOut();
+if(!currentUser)return;
 
-currentUser=null;
+if(currentUser.id!==ADMIN_ID&&currentProfile?.role!=="admin"){
 
-currentProfile=null;
+alert("আপনার Admin Access নেই");
 
-selectedOption=null;
+return;
 
-showAuth();
+}
+
+document.getElementById("gameSection").classList.add("hidden");
+
+document.getElementById("adminSection").classList.remove("hidden");
+
+loadUsers();
+
+}
+
+
+function closeAdmin(){
+
+document.getElementById("adminSection").classList.add("hidden");
+
+document.getElementById("gameSection").classList.remove("hidden");
+
+}
+
+
+async function loadUsers(){
+
+const box=document.getElementById("usersList");
+
+box.innerHTML='<div class="loading">Loading Users...</div>';
+
+const {data,error}=await supabase
+.from("profiles")
+.select("id,name,email,points,role,created_at")
+.order("created_at",{ascending:false});
+
+if(error){
+
+box.innerHTML="<div>User load করা যাচ্ছে না</div>";
+
+console.log(error);
+
+return;
+
+}
+
+if(!data||data.length===0){
+
+box.innerHTML="<div>কোনো User নেই</div>";
+
+return;
+
+}
+
+box.innerHTML=data.map(user=>`
+
+<div class="history">
+
+<div>
+<strong>👤 ${escapeHtml(user.name||"User")}</strong>
+</div>
+
+<div class="small">
+${escapeHtml(user.email||"")}
+</div>
+
+<div class="small">
+Points: <strong>${user.points||0}</strong>
+</div>
+
+<div class="small">
+Role: ${user.role||"user"}
+</div>
+
+${
+user.id!==ADMIN_ID
+?
+`
+<button
+class="gold"
+onclick="addPoints('${user.id}',${user.points||0})"
+>
+➕ Points যোগ করুন
+</button>
+`
+:""
+}
+
+</div>
+
+`).join("");
+
+}
+
+
+async function addPoints(userId,currentPoints){
+
+if(currentUser.id!==ADMIN_ID){
+
+alert("Admin Access প্রয়োজন");
+
+return;
+
+}
+
+const value=prompt(
+`বর্তমান Points: ${currentPoints}\nকত Points যোগ করবেন?`
+);
+
+if(value===null)return;
+
+const amount=parseInt(value);
+
+if(isNaN(amount)||amount<=0){
+
+alert("সঠিক Points লিখুন");
+
+return;
+
+}
+
+const newPoints=currentPoints+amount;
+
+const {error}=await supabase
+.from("profiles")
+.update({
+points:newPoints
+})
+.eq("id",userId);
+
+if(error){
+
+alert(error.message);
+
+return;
+
+}
+
+const {error:historyError}=await supabase
+.from("point_history")
+.insert({
+
+user_id:userId,
+
+points:amount,
+
+type:"admin_add",
+
+description:"Admin দ্বারা Virtual Points যোগ করা হয়েছে"
+
+});
+
+if(historyError){
+
+console.log(historyError);
+
+}
+
+alert("Points সফলভাবে যোগ হয়েছে");
+
+await loadUsers();
+
+}
+
+
+function escapeHtml(text){
+
+return String(text)
+.replace(/&/g,"&amp;")
+.replace(/</g,"&lt;")
+.replace(/>/g,"&gt;")
+.replace(/"/g,"&quot;")
+.replace(/'/g,"&#039;");
 
 }
 
 
 async function checkSession(){
 
-const {
-data
-} =
-await db.auth.getSession();
+const {data}=await supabase.auth.getSession();
 
-if(
-data &&
-data.session &&
-data.session.user
-){
+if(data.session){
 
-currentUser =
-data.session.user;
+currentUser=data.session.user;
 
-await loadProfile();
+await loadApp();
 
 }else{
 
-showAuth();
+showLogin();
 
 }
 
 }
 
 
-db.auth.onAuthStateChange(
-(event,session)=>{
+supabase.auth.onAuthStateChange(
+async(event,session)=>{
 
-if(
-event === "SIGNED_OUT"
-){
+if(session){
+
+currentUser=session.user;
+
+}else{
 
 currentUser=null;
 
-currentProfile=null;
-
-showAuth();
-
 }
 
-}
-);
+});
 
 
 checkSession();
