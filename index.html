@@ -6,8 +6,6 @@
 
 <title>Nice Game</title>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
 <style>
 *{
   box-sizing:border-box;
@@ -44,6 +42,14 @@ h1{
   margin-bottom:8px;
 }
 
+h2{
+  margin-bottom:10px;
+}
+
+h3{
+  margin-bottom:10px;
+}
+
 .subtitle{
   text-align:center;
   color:#cbd5e1;
@@ -56,7 +62,7 @@ label{
   font-weight:bold;
 }
 
-input,select{
+input{
   width:100%;
   padding:14px;
   border:none;
@@ -151,7 +157,7 @@ button:hover{
 }
 
 .option-btn{
-  min-height:70px;
+  min-height:75px;
   background:#334155;
   color:#fff;
 }
@@ -269,12 +275,14 @@ th{
   color:#cbd5e1;
 }
 
-.loading{
-  opacity:.6;
-  pointer-events:none;
+.empty{
+  text-align:center;
+  padding:20px;
+  color:#cbd5e1;
 }
 
 @media(max-width:650px){
+
   body{
     padding:10px;
   }
@@ -300,6 +308,12 @@ th{
     height:65px;
     font-size:32px;
   }
+
+  .admin-player-top{
+    flex-direction:column;
+    align-items:flex-start;
+  }
+
 }
 </style>
 </head>
@@ -308,226 +322,379 @@ th{
 
 <div class="container">
 
-  <!-- LOGIN -->
-  <div id="loginSection" class="card">
+<!-- ================= LOGIN ================= -->
 
-    <h1>🎲 Nice Game</h1>
+<div id="loginSection" class="card">
 
-    <p class="subtitle">
-      নাম লিখে ভার্চুয়াল পয়েন্টের গেম শুরু করুন
-    </p>
+  <h1>🎲 Nice Game</h1>
 
-    <label for="playerName">আপনার নাম লিখুন</label>
+  <p class="subtitle">
+    ভার্চুয়াল পয়েন্টের Dice Game
+  </p>
 
-    <input
-      type="text"
-      id="playerName"
-      placeholder="যেমন: Jakir"
-      maxlength="50"
-      autocomplete="off"
-    >
+  <label>
+    আপনার নাম লিখুন
+  </label>
 
-    <button class="primary" onclick="startGame()">
-      🚀 গেম শুরু করুন
-    </button>
+  <input
+    type="text"
+    id="playerName"
+    placeholder="যেমন: Jakir"
+    maxlength="50"
+    autocomplete="off"
+  >
 
-    <div id="loginMessage" class="message"></div>
+  <button
+    class="primary"
+    onclick="startGame()"
+  >
+    🚀 গেম শুরু করুন
+  </button>
+
+  <div
+    id="loginMessage"
+    class="message"
+  ></div>
+
+</div>
+
+
+<!-- ================= GAME ================= -->
+
+<div
+  id="gameSection"
+  class="hidden"
+>
+
+  <!-- PLAYER INFO -->
+
+  <div class="card">
+
+    <div class="user-info">
+
+      <div>
+
+        <div class="small">
+          খেলোয়াড়
+        </div>
+
+        <h2 id="currentPlayerName">
+          -
+        </h2>
+
+      </div>
+
+
+      <div>
+
+        <div class="small">
+          বর্তমান পয়েন্ট
+        </div>
+
+        <div
+          class="points"
+          id="currentPoints"
+        >
+          0
+        </div>
+
+      </div>
+
+
+      <button
+        class="danger"
+        onclick="logoutPlayer()"
+      >
+        🚪 বের হন
+      </button>
+
+    </div>
 
   </div>
 
 
   <!-- GAME -->
-  <div id="gameSection" class="hidden">
 
-    <div class="card">
+  <div class="card">
 
-      <div class="user-info">
+    <h2>
+      🎲 Dice Game
+    </h2>
 
-        <div>
-          <div class="small">খেলোয়াড়</div>
-          <h2 id="currentPlayerName">-</h2>
-        </div>
-
-        <div>
-          <div class="small">বর্তমান পয়েন্ট</div>
-          <div class="points" id="currentPoints">0</div>
-        </div>
-
-        <button class="danger" onclick="logoutPlayer()">
-          🚪 বের হন
-        </button>
-
-      </div>
-
-    </div>
+    <p class="subtitle">
+      একটি অপশন নির্বাচন করুন
+    </p>
 
 
-    <!-- GAME CARD -->
-    <div class="card">
-
-      <h2>🎲 Dice Game</h2>
-
-      <p class="subtitle">
-        নিচের একটি অপশন নির্বাচন করুন
-      </p>
-
-      <div class="game-options">
-
-        <button
-          class="option-btn"
-          onclick="playGame('LE7')"
-        >
-          🔽 ৭ বা তার কম
-          <br>
-          <small>জিতলে +১০ | হারলে -৫</small>
-        </button>
-
-        <button
-          class="option-btn"
-          onclick="playGame('GT7')"
-        >
-          🔼 ৭ এর বেশি
-          <br>
-          <small>জিতলে +১০ | হারলে -৫</small>
-        </button>
-
-        <button
-          class="option-btn"
-          onclick="playGame('EVEN')"
-        >
-          ⚖️ জোড় সংখ্যা
-          <br>
-          <small>জিতলে +১০ | হারলে -৫</small>
-        </button>
-
-      </div>
-
-
-      <div class="dice-area">
-
-        <div>
-          <div id="dice1" class="dice">?</div>
-          <div id="dice2" class="dice">?</div>
-        </div>
-
-        <div class="total">
-          মোট: <strong id="diceTotal">-</strong>
-        </div>
-
-      </div>
-
-
-      <div id="gameResult" class="result"></div>
-
-      <div id="gameMessage" class="message"></div>
-
-    </div>
-
-
-    <!-- STATISTICS -->
-    <div class="card">
-
-      <h2>📊 আমার পরিসংখ্যান</h2>
-
-      <div class="stats-grid">
-
-        <div class="stat">
-          <span class="stat-number" id="totalGames">0</span>
-          মোট গেম
-        </div>
-
-        <div class="stat">
-          <span class="stat-number" id="wins">0</span>
-          জয়
-        </div>
-
-        <div class="stat">
-          <span class="stat-number" id="losses">0</span>
-          হার
-        </div>
-
-        <div class="stat">
-          <span class="stat-number" id="winRate">0%</span>
-          জয় হার
-        </div>
-
-      </div>
-
-      <div id="diceStats" class="stats-grid"></div>
-
-    </div>
-
-
-    <!-- HISTORY -->
-    <div class="card">
-
-      <h2>📜 গেম হিস্টোরি</h2>
-
-      <div class="table-wrap">
-
-        <table>
-
-          <thead>
-            <tr>
-              <th>সময়</th>
-              <th>ডাইস</th>
-              <th>মোট</th>
-              <th>অপশন</th>
-              <th>ফলাফল</th>
-              <th>পয়েন্ট</th>
-            </tr>
-          </thead>
-
-          <tbody id="historyBody">
-          </tbody>
-
-        </table>
-
-      </div>
-
-    </div>
-
-
-    <!-- ADMIN -->
-    <div id="adminSection" class="card hidden">
-
-      <h2>👑 Admin Panel</h2>
-
-      <p class="subtitle">
-        নতুন খেলোয়াড় তৈরি এবং পয়েন্ট যোগ করুন
-      </p>
-
-
-      <h3>➕ নতুন খেলোয়াড়</h3>
-
-      <br>
-
-      <input
-        type="text"
-        id="newPlayerName"
-        placeholder="নতুন খেলোয়াড়ের নাম"
-        maxlength="50"
-      >
+    <div class="game-options">
 
       <button
-        class="secondary"
-        onclick="createPlayer()"
+        class="option-btn"
+        onclick="playGame('LE7')"
       >
-        নতুন খেলোয়াড় তৈরি
+        🔽 ৭ বা তার কম
+        <br>
+        <small>
+          জয় +১০ | হার -৫
+        </small>
       </button>
 
-      <div id="adminMessage" class="message"></div>
+
+      <button
+        class="option-btn"
+        onclick="playGame('GT7')"
+      >
+        🔼 ৭ এর বেশি
+        <br>
+        <small>
+          জয় +১০ | হার -৫
+        </small>
+      </button>
 
 
-      <br><br>
+      <button
+        class="option-btn"
+        onclick="playGame('EVEN')"
+      >
+        ⚖️ জোড় সংখ্যা
+        <br>
+        <small>
+          জয় +১০ | হার -৫
+        </small>
+      </button>
 
-      <h3>👥 সকল খেলোয়াড়</h3>
+    </div>
 
-      <div id="adminPlayers"></div>
+
+    <div class="dice-area">
+
+      <div>
+
+        <div
+          id="dice1"
+          class="dice"
+        >
+          ?
+        </div>
+
+        <div
+          id="dice2"
+          class="dice"
+        >
+          ?
+        </div>
+
+      </div>
+
+
+      <div class="total">
+
+        মোট:
+        <strong id="diceTotal">
+          -
+        </strong>
+
+      </div>
+
+    </div>
+
+
+    <div
+      id="gameResult"
+      class="result"
+    ></div>
+
+
+    <div
+      id="gameMessage"
+      class="message"
+    ></div>
+
+  </div>
+
+
+  <!-- STATISTICS -->
+
+  <div class="card">
+
+    <h2>
+      📊 আমার পরিসংখ্যান
+    </h2>
+
+
+    <div class="stats-grid">
+
+      <div class="stat">
+
+        <span
+          class="stat-number"
+          id="totalGames"
+        >
+          0
+        </span>
+
+        মোট গেম
+
+      </div>
+
+
+      <div class="stat">
+
+        <span
+          class="stat-number"
+          id="wins"
+        >
+          0
+        </span>
+
+        জয়
+
+      </div>
+
+
+      <div class="stat">
+
+        <span
+          class="stat-number"
+          id="losses"
+        >
+          0
+        </span>
+
+        হার
+
+      </div>
+
+
+      <div class="stat">
+
+        <span
+          class="stat-number"
+          id="winRate"
+        >
+          0%
+        </span>
+
+        জয় হার
+
+      </div>
+
+    </div>
+
+
+    <div
+      id="diceStats"
+      class="stats-grid"
+    ></div>
+
+  </div>
+
+
+  <!-- HISTORY -->
+
+  <div class="card">
+
+    <h2>
+      📜 গেম হিস্টোরি
+    </h2>
+
+
+    <div class="table-wrap">
+
+      <table>
+
+        <thead>
+
+          <tr>
+
+            <th>সময়</th>
+
+            <th>ডাইস</th>
+
+            <th>মোট</th>
+
+            <th>অপশন</th>
+
+            <th>ফলাফল</th>
+
+            <th>পয়েন্ট</th>
+
+          </tr>
+
+        </thead>
+
+
+        <tbody
+          id="historyBody"
+        ></tbody>
+
+      </table>
 
     </div>
 
   </div>
+
+
+  <!-- ADMIN -->
+
+  <div
+    id="adminSection"
+    class="card hidden"
+  >
+
+    <h2>
+      👑 Admin Panel
+    </h2>
+
+    <p class="subtitle">
+      খেলোয়াড় তৈরি ও পয়েন্ট যোগ করুন
+    </p>
+
+
+    <h3>
+      ➕ নতুন খেলোয়াড়
+    </h3>
+
+    <br>
+
+
+    <input
+      type="text"
+      id="newPlayerName"
+      placeholder="নতুন খেলোয়াড়ের নাম"
+      maxlength="50"
+    >
+
+
+    <button
+      class="secondary"
+      onclick="createPlayer()"
+    >
+      নতুন খেলোয়াড় তৈরি
+    </button>
+
+
+    <div
+      id="adminMessage"
+      class="message"
+    ></div>
+
+
+    <br><br>
+
+
+    <h3>
+      👥 সকল খেলোয়াড়
+    </h3>
+
+
+    <div
+      id="adminPlayers"
+    ></div>
+
+  </div>
+
+</div>
 
 </div>
 
@@ -535,86 +702,158 @@ th{
 <script>
 
 /* =========================================
-   SUPABASE CONFIG
+   SETTINGS
 ========================================= */
 
-const SUPABASE_URL =
-  "https://mulroqtysdawwvdrpdxtx.supabase.co";
-
-const SUPABASE_KEY =
-  "sb_publishable_-v7fU5dwzz0LddbM-f87PQ_-L1BH-bl";
-
 const ADMIN_ID =
-  "95b9a85a-c30b-4111-b688-20abde0d3236";
+"ADMIN-001";
+
+
+const STORAGE_KEY =
+"nice_game_players_v1";
+
+
+let players = [];
+
+let currentPlayer = null;
+
+let gameRunning = false;
 
 
 /* =========================================
-   SUPABASE CLIENT
+   LOAD DATA
 ========================================= */
 
-let supabaseClient;
+function loadData(){
 
-try{
+  try{
 
-  if(!window.supabase){
-    throw new Error(
-      "Supabase library load হয়নি। Internet connection পরীক্ষা করুন।"
-    );
+    const saved =
+      localStorage.getItem(
+        STORAGE_KEY
+      );
+
+    if(saved){
+
+      players =
+        JSON.parse(saved);
+
+    }
+
+  }catch(error){
+
+    console.error(error);
+
+    players = [];
+
   }
 
-  supabaseClient =
-    window.supabase.createClient(
-      SUPABASE_URL,
-      SUPABASE_KEY
-    );
+}
 
-}catch(error){
 
-  console.error(error);
+/* =========================================
+   SAVE DATA
+========================================= */
 
-  showMessage(
-    "loginMessage",
-    "❌ Supabase চালু করা যাচ্ছে না: " + error.message,
-    "error"
+function saveData(){
+
+  localStorage.setItem(
+    STORAGE_KEY,
+    JSON.stringify(players)
   );
 
 }
 
 
 /* =========================================
-   CURRENT PLAYER
+   ADMIN DEFAULT PLAYER
 ========================================= */
 
-let currentPlayer = null;
-let gameRunning = false;
+function createDefaultAdmin(){
+
+  const admin =
+    players.find(
+      p => p.id === ADMIN_ID
+    );
+
+
+  if(!admin){
+
+    players.push({
+
+      id:ADMIN_ID,
+
+      name:"Admin",
+
+      points:100,
+
+      isAdmin:true,
+
+      createdAt:new Date().toISOString(),
+
+      history:[]
+
+    });
+
+
+    saveData();
+
+  }
+
+}
+
+
+/* =========================================
+   INITIALIZE
+========================================= */
+
+loadData();
+
+createDefaultAdmin();
 
 
 /* =========================================
    MESSAGE
 ========================================= */
 
-function showMessage(id,text,type="info"){
+function showMessage(
+  id,
+  text,
+  type="info"
+){
 
-  const element = document.getElementById(id);
+  const element =
+    document.getElementById(id);
+
 
   if(!element) return;
+
 
   element.className =
     "message " + type;
 
-  element.innerText = text;
 
-  element.style.display = "block";
+  element.innerText =
+    text;
+
+
+  element.style.display =
+    "block";
 
 }
 
 
 function hideMessage(id){
 
-  const element = document.getElementById(id);
+  const element =
+    document.getElementById(id);
+
 
   if(element){
-    element.style.display = "none";
+
+    element.style.display =
+      "none";
+
   }
 
 }
@@ -624,25 +863,16 @@ function hideMessage(id){
    START GAME
 ========================================= */
 
-async function startGame(){
+function startGame(){
 
-  if(!supabaseClient){
-
-    showMessage(
-      "loginMessage",
-      "❌ Supabase connection তৈরি হয়নি।",
-      "error"
+  const input =
+    document.getElementById(
+      "playerName"
     );
 
-    return;
-  }
-
-
-  const nameInput =
-    document.getElementById("playerName");
 
   const name =
-    nameInput.value.trim();
+    input.value.trim();
 
 
   if(!name){
@@ -654,6 +884,7 @@ async function startGame(){
     );
 
     return;
+
   }
 
 
@@ -666,206 +897,153 @@ async function startGame(){
     );
 
     return;
+
   }
 
 
-  showMessage(
-    "loginMessage",
-    "⏳ Database থেকে তথ্য নেওয়া হচ্ছে...",
-    "info"
-  );
+  /*
+    নাম case-insensitive
+  */
 
-
-  try{
-
-    /*
-      আগে খেলোয়াড় খুঁজবো
-    */
-
-    const {data,error} =
-      await supabaseClient
-      .from("players")
-      .select("*")
-      .eq("name",name)
-      .maybeSingle();
-
-
-    if(error){
-
-      console.error("Player search error:",error);
-
-      throw new Error(
-        "Database Error: " + error.message
-      );
-    }
-
-
-    /*
-      Player না থাকলে নতুন player
-    */
-
-    if(!data){
-
-      const {
-        data:newPlayer,
-        error:insertError
-      } =
-        await supabaseClient
-        .from("players")
-        .insert({
-          name:name,
-          points:100
-        })
-        .select()
-        .single();
-
-
-      if(insertError){
-
-        /*
-          একই সময়ে একই নাম তৈরি হলে
-          আবার খুঁজে দেখবো
-        */
-
-        const {
-          data:existingPlayer,
-          error:existingError
-        } =
-          await supabaseClient
-          .from("players")
-          .select("*")
-          .eq("name",name)
-          .maybeSingle();
-
-
-        if(existingError || !existingPlayer){
-
-          throw new Error(
-            "Player তৈরি করা যায়নি: " +
-            insertError.message
-          );
-        }
-
-        currentPlayer =
-          existingPlayer;
-
-      }else{
-
-        currentPlayer =
-          newPlayer;
-
-
-        /*
-          Initial history
-        */
-
-        const {
-          error:historyError
-        } =
-          await supabaseClient
-          .from("point_history")
-          .insert({
-            player_id:currentPlayer.id,
-            points:100,
-            type:"INITIAL",
-            description:"নতুন খেলোয়াড়ের শুরু পয়েন্ট"
-          });
-
-
-        if(historyError){
-
-          console.warn(
-            "Initial history error:",
-            historyError
-          );
-        }
-
-      }
-
-    }else{
-
-      currentPlayer = data;
-
-    }
-
-
-    /*
-      UI
-    */
-
-    document
-      .getElementById("loginSection")
-      .classList.add("hidden");
-
-    document
-      .getElementById("gameSection")
-      .classList.remove("hidden");
-
-
-    updatePlayerUI();
-
-
-    /*
-      Admin check
-    */
-
-    if(currentPlayer.id === ADMIN_ID){
-
-      document
-        .getElementById("adminSection")
-        .classList.remove("hidden");
-
-      await loadAdminPlayers();
-
-    }else{
-
-      document
-        .getElementById("adminSection")
-        .classList.add("hidden");
-
-    }
-
-
-    await loadHistory();
-    await loadStatistics();
-
-
-    hideMessage("loginMessage");
-
-
-  }catch(error){
-
-    console.error(error);
-
-    showMessage(
-      "loginMessage",
-      "❌ Database Error: " +
-      (error.message || error),
-      "error"
+  let player =
+    players.find(
+      p =>
+        p.name.toLowerCase()
+        ===
+        name.toLowerCase()
     );
 
+
+  /*
+    নতুন player
+  */
+
+  if(!player){
+
+    player = {
+
+      id:
+        "PLAYER-" +
+        Date.now() +
+        "-" +
+        Math.floor(
+          Math.random()*10000
+        ),
+
+      name:name,
+
+      points:100,
+
+      isAdmin:false,
+
+      createdAt:
+        new Date().toISOString(),
+
+      history:[]
+
+    };
+
+
+    players.push(player);
+
+    saveData();
+
   }
+
+
+  currentPlayer =
+    player;
+
+
+  /*
+    Game UI
+  */
+
+  document
+    .getElementById(
+      "loginSection"
+    )
+    .classList
+    .add("hidden");
+
+
+  document
+    .getElementById(
+      "gameSection"
+    )
+    .classList
+    .remove("hidden");
+
+
+  updatePlayerUI();
+
+
+  /*
+    Admin
+  */
+
+  if(
+    currentPlayer.id === ADMIN_ID
+  ){
+
+    document
+      .getElementById(
+        "adminSection"
+      )
+      .classList
+      .remove("hidden");
+
+
+    loadAdminPlayers();
+
+  }else{
+
+    document
+      .getElementById(
+        "adminSection"
+      )
+      .classList
+      .add("hidden");
+
+  }
+
+
+  loadHistory();
+
+  loadStatistics();
+
+
+  hideMessage(
+    "loginMessage"
+  );
 
 }
 
 
 /* =========================================
-   UPDATE PLAYER UI
+   UPDATE PLAYER
 ========================================= */
 
 function updatePlayerUI(){
 
-  if(!currentPlayer) return;
+  if(!currentPlayer)
+    return;
+
 
   document
-    .getElementById("currentPlayerName")
+    .getElementById(
+      "currentPlayerName"
+    )
     .innerText =
       currentPlayer.name;
 
+
   document
-    .getElementById("currentPoints")
+    .getElementById(
+      "currentPoints"
+    )
     .innerText =
-      Number(currentPlayer.points || 0);
+      currentPlayer.points;
 
 }
 
@@ -874,7 +1052,7 @@ function updatePlayerUI(){
    PLAY GAME
 ========================================= */
 
-async function playGame(option){
+function playGame(option){
 
   if(!currentPlayer){
 
@@ -885,244 +1063,227 @@ async function playGame(option){
     );
 
     return;
+
   }
 
 
-  if(gameRunning) return;
+  if(gameRunning)
+    return;
+
 
   gameRunning = true;
 
 
   document
-    .querySelectorAll(".option-btn")
-    .forEach(btn=>{
-      btn.classList.add("loading");
-    });
-
-
-  hideMessage("gameMessage");
-
-
-  try{
-
-    /*
-      Dice
-    */
-
-    const dice1 =
-      Math.floor(Math.random()*6)+1;
-
-    const dice2 =
-      Math.floor(Math.random()*6)+1;
-
-    const total =
-      dice1+dice2;
-
-
-    document
-      .getElementById("dice1")
-      .innerText = dice1;
-
-    document
-      .getElementById("dice2")
-      .innerText = dice2;
-
-    document
-      .getElementById("diceTotal")
-      .innerText = total;
-
-
-    /*
-      Result
-    */
-
-    let win = false;
-
-
-    if(option === "LE7"){
-      win = total <= 7;
-    }
-
-    if(option === "GT7"){
-      win = total > 7;
-    }
-
-    if(option === "EVEN"){
-      win = total % 2 === 0;
-    }
-
-
-    const pointsChange =
-      win ? 10 : -5;
-
-
-    const oldPoints =
-      Number(currentPlayer.points || 0);
-
-
-    const newPoints =
-      Math.max(0,oldPoints + pointsChange);
-
-
-    /*
-      Database update
-    */
-
-    const {
-      data:updatedPlayer,
-      error:updateError
-    } =
-      await supabaseClient
-      .from("players")
-      .update({
-        points:newPoints
-      })
-      .eq("id",currentPlayer.id)
-      .select()
-      .single();
-
-
-    if(updateError){
-
-      throw new Error(
-        "পয়েন্ট আপডেট হয়নি: " +
-        updateError.message
-      );
-    }
-
-
-    currentPlayer =
-      updatedPlayer;
-
-
-    /*
-      Game history
-    */
-
-    const {
-      error:gameError
-    } =
-      await supabaseClient
-      .from("games")
-      .insert({
-
-        player_id:currentPlayer.id,
-
-        dice_1:dice1,
-
-        dice_2:dice2,
-
-        total:total,
-
-        selected_option:option,
-
-        result:win ? "WIN" : "LOSS",
-
-        points_change:pointsChange
-
-      });
-
-
-    if(gameError){
-
-      console.error(
-        "Game insert error:",
-        gameError
-      );
-
-    }
-
-
-    /*
-      Point history
-    */
-
-    const {
-      error:pointHistoryError
-    } =
-      await supabaseClient
-      .from("point_history")
-      .insert({
-
-        player_id:currentPlayer.id,
-
-        points:newPoints,
-
-        type:win ? "WIN" : "LOSS",
-
-        description:
-          `Dice: ${dice1}+${dice2}=${total} | ` +
-          `পরিবর্তন: ${pointsChange > 0 ? "+" : ""}${pointsChange}`
-
-      });
-
-
-    if(pointHistoryError){
-
-      console.error(
-        "Point history error:",
-        pointHistoryError
-      );
-
-    }
-
-
-    /*
-      Result UI
-    */
-
-    const resultElement =
-      document.getElementById("gameResult");
-
-
-    if(win){
-
-      resultElement.innerHTML =
-        "🎉 আপনি জিতেছেন! +১০ পয়েন্ট";
-
-      resultElement.className =
-        "result win";
-
-    }else{
-
-      resultElement.innerHTML =
-        "😢 আপনি হেরেছেন! -৫ পয়েন্ট";
-
-      resultElement.className =
-        "result loss";
-
-    }
-
-
-    updatePlayerUI();
-
-    await loadHistory();
-
-    await loadStatistics();
-
-
-  }catch(error){
-
-    console.error(error);
-
-    showMessage(
-      "gameMessage",
-      "❌ " +
-      (error.message || error),
-      "error"
+    .querySelectorAll(
+      ".option-btn"
+    )
+    .forEach(
+      btn =>
+        btn.disabled = true
     );
 
-  }finally{
 
-    gameRunning = false;
+  /*
+    Dice
+  */
 
-    document
-      .querySelectorAll(".option-btn")
-      .forEach(btn=>{
-        btn.classList.remove("loading");
-      });
+  const dice1 =
+    Math.floor(
+      Math.random()*6
+    ) + 1;
+
+
+  const dice2 =
+    Math.floor(
+      Math.random()*6
+    ) + 1;
+
+
+  const total =
+    dice1 + dice2;
+
+
+  document
+    .getElementById("dice1")
+    .innerText =
+      dice1;
+
+
+  document
+    .getElementById("dice2")
+    .innerText =
+      dice2;
+
+
+  document
+    .getElementById("diceTotal")
+    .innerText =
+      total;
+
+
+  /*
+    Check result
+  */
+
+  let win =
+    false;
+
+
+  if(option === "LE7"){
+
+    win =
+      total <= 7;
 
   }
+
+
+  if(option === "GT7"){
+
+    win =
+      total > 7;
+
+  }
+
+
+  if(option === "EVEN"){
+
+    win =
+      total % 2 === 0;
+
+  }
+
+
+  const pointsChange =
+    win ? 10 : -5;
+
+
+  const oldPoints =
+    Number(
+      currentPlayer.points
+    );
+
+
+  const newPoints =
+    Math.max(
+      0,
+      oldPoints + pointsChange
+    );
+
+
+  currentPlayer.points =
+    newPoints;
+
+
+  /*
+    History
+  */
+
+  if(!currentPlayer.history){
+
+    currentPlayer.history = [];
+
+  }
+
+
+  currentPlayer.history.unshift({
+
+    id:Date.now(),
+
+    createdAt:
+      new Date().toISOString(),
+
+    dice1:dice1,
+
+    dice2:dice2,
+
+    total:total,
+
+    option:option,
+
+    result:
+      win
+      ? "WIN"
+      : "LOSS",
+
+    pointsChange:
+      pointsChange,
+
+    pointsAfter:
+      newPoints
+
+  });
+
+
+  /*
+    Keep only last 100
+  */
+
+  currentPlayer.history =
+    currentPlayer.history
+      .slice(0,100);
+
+
+  saveData();
+
+
+  /*
+    Result
+  */
+
+  const resultElement =
+    document.getElementById(
+      "gameResult"
+    );
+
+
+  if(win){
+
+    resultElement.innerText =
+      "🎉 আপনি জিতেছেন! +১০ পয়েন্ট";
+
+    resultElement.className =
+      "result win";
+
+  }else{
+
+    resultElement.innerText =
+      "😢 আপনি হেরেছেন! -৫ পয়েন্ট";
+
+    resultElement.className =
+      "result loss";
+
+  }
+
+
+  updatePlayerUI();
+
+  loadHistory();
+
+  loadStatistics();
+
+
+  /*
+    Enable buttons
+  */
+
+  setTimeout(
+    () => {
+
+      gameRunning = false;
+
+      document
+        .querySelectorAll(
+          ".option-btn"
+        )
+        .forEach(
+          btn =>
+            btn.disabled = false
+        );
+
+    },
+    300
+  );
 
 }
 
@@ -1133,17 +1294,17 @@ async function playGame(option){
 
 function optionName(option){
 
-  if(option === "LE7"){
+  if(option === "LE7")
     return "৭ বা তার কম";
-  }
 
-  if(option === "GT7"){
+
+  if(option === "GT7")
     return "৭ এর বেশি";
-  }
 
-  if(option === "EVEN"){
+
+  if(option === "EVEN")
     return "জোড় সংখ্যা";
-  }
+
 
   return option;
 
@@ -1154,145 +1315,130 @@ function optionName(option){
    LOAD HISTORY
 ========================================= */
 
-async function loadHistory(){
+function loadHistory(){
 
-  if(!currentPlayer) return;
-
-
-  const {
-    data,
-    error
-  } =
-    await supabaseClient
-    .from("games")
-    .select("*")
-    .eq("player_id",currentPlayer.id)
-    .order("created_at",{ascending:false})
-    .limit(50);
-
-
-  if(error){
-
-    console.error(
-      "History error:",
-      error
-    );
-
+  if(!currentPlayer)
     return;
-  }
 
 
   const body =
-    document.getElementById("historyBody");
+    document.getElementById(
+      "historyBody"
+    );
 
 
   body.innerHTML = "";
 
 
-  if(!data || data.length === 0){
+  const history =
+    currentPlayer.history || [];
 
-    body.innerHTML =
-      `<tr>
+
+  if(history.length === 0){
+
+    body.innerHTML = `
+
+      <tr>
+
         <td colspan="6">
+
           এখনো কোনো গেম খেলা হয়নি।
+
         </td>
-      </tr>`;
 
-    return;
-  }
-
-
-  data.forEach(game=>{
-
-    const tr =
-      document.createElement("tr");
-
-
-    const date =
-      new Date(game.created_at)
-      .toLocaleString("bn-BD");
-
-
-    const result =
-      game.result === "WIN"
-      ? "জয় 🎉"
-      : "হার 😢";
-
-
-    const pointText =
-      game.points_change > 0
-      ? `+${game.points_change}`
-      : game.points_change;
-
-
-    tr.innerHTML = `
-
-      <td>${date}</td>
-
-      <td>
-        ${game.dice_1} + ${game.dice_2}
-      </td>
-
-      <td>
-        ${game.total}
-      </td>
-
-      <td>
-        ${optionName(game.selected_option)}
-      </td>
-
-      <td>
-        ${result}
-      </td>
-
-      <td>
-        ${pointText}
-      </td>
+      </tr>
 
     `;
 
+    return;
 
-    body.appendChild(tr);
+  }
 
-  });
+
+  history.forEach(
+    game => {
+
+      const tr =
+        document.createElement(
+          "tr"
+        );
+
+
+      const date =
+        new Date(
+          game.createdAt
+        )
+        .toLocaleString(
+          "bn-BD"
+        );
+
+
+      const result =
+        game.result === "WIN"
+        ? "জয় 🎉"
+        : "হার 😢";
+
+
+      const pointText =
+        game.pointsChange > 0
+        ? "+" +
+          game.pointsChange
+        : game.pointsChange;
+
+
+      tr.innerHTML = `
+
+        <td>
+          ${date}
+        </td>
+
+        <td>
+          ${game.dice1}
+          +
+          ${game.dice2}
+        </td>
+
+        <td>
+          ${game.total}
+        </td>
+
+        <td>
+          ${optionName(
+            game.option
+          )}
+        </td>
+
+        <td>
+          ${result}
+        </td>
+
+        <td>
+          ${pointText}
+        </td>
+
+      `;
+
+
+      body.appendChild(tr);
+
+    }
+  );
 
 }
 
 
 /* =========================================
-   LOAD STATISTICS
+   STATISTICS
 ========================================= */
 
-async function loadStatistics(){
+function loadStatistics(){
 
-  if(!currentPlayer) return;
-
-
-  const {
-    data,
-    error
-  } =
-    await supabaseClient
-    .from("games")
-    .select(
-      "total,result"
-    )
-    .eq("player_id",currentPlayer.id);
-
-
-  if(error){
-
-    console.error(
-      "Statistics error:",
-      error
-    );
-
+  if(!currentPlayer)
     return;
-  }
 
 
   const games =
-    data || [];
+    currentPlayer.history || [];
 
 
   const totalGames =
@@ -1301,82 +1447,127 @@ async function loadStatistics(){
 
   const wins =
     games.filter(
-      game => game.result === "WIN"
+      game =>
+        game.result === "WIN"
     ).length;
 
 
   const losses =
     games.filter(
-      game => game.result === "LOSS"
+      game =>
+        game.result === "LOSS"
     ).length;
 
 
   const winRate =
     totalGames
-    ? ((wins/totalGames)*100).toFixed(1)
+    ? (
+        wins /
+        totalGames *
+        100
+      ).toFixed(1)
     : "0";
 
 
   document
-    .getElementById("totalGames")
-    .innerText = totalGames;
+    .getElementById(
+      "totalGames"
+    )
+    .innerText =
+      totalGames;
 
 
   document
-    .getElementById("wins")
-    .innerText = wins;
+    .getElementById(
+      "wins"
+    )
+    .innerText =
+      wins;
 
 
   document
-    .getElementById("losses")
-    .innerText = losses;
+    .getElementById(
+      "losses"
+    )
+    .innerText =
+      losses;
 
 
   document
-    .getElementById("winRate")
+    .getElementById(
+      "winRate"
+    )
     .innerText =
       winRate + "%";
 
 
   /*
-    Dice statistics
+    Total statistics
   */
 
   const counts = {};
 
-  for(let i=2;i<=12;i++){
+
+  for(
+    let i=2;
+    i<=12;
+    i++
+  ){
+
     counts[i] = 0;
+
   }
 
 
-  games.forEach(game=>{
+  games.forEach(
+    game => {
 
-    if(counts[game.total] !== undefined){
+      if(
+        counts[
+          game.total
+        ] !== undefined
+      ){
 
-      counts[game.total]++;
+        counts[
+          game.total
+        ]++;
+
+      }
 
     }
-
-  });
-
-
-  const diceStats =
-    document.getElementById("diceStats");
+  );
 
 
-  diceStats.innerHTML = "";
+  const stats =
+    document.getElementById(
+      "diceStats"
+    );
 
 
-  for(let i=2;i<=12;i++){
+  stats.innerHTML = "";
+
+
+  for(
+    let i=2;
+    i<=12;
+    i++
+  ){
 
     const div =
-      document.createElement("div");
+      document.createElement(
+        "div"
+      );
 
-    div.className = "stat";
+
+    div.className =
+      "stat";
+
 
     div.innerHTML = `
 
-      <span class="stat-number">
+      <span
+        class="stat-number"
+      >
         ${counts[i]}
       </span>
 
@@ -1384,7 +1575,8 @@ async function loadStatistics(){
 
     `;
 
-    diceStats.appendChild(div);
+
+    stats.appendChild(div);
 
   }
 
@@ -1395,119 +1587,129 @@ async function loadStatistics(){
    ADMIN: LOAD PLAYERS
 ========================================= */
 
-async function loadAdminPlayers(){
-
-  if(!currentPlayer) return;
-
-
-  if(currentPlayer.id !== ADMIN_ID) return;
-
-
-  const {
-    data,
-    error
-  } =
-    await supabaseClient
-    .from("players")
-    .select("*")
-    .order("created_at",{ascending:false});
-
-
-  if(error){
-
-    console.error(
-      "Admin players error:",
-      error
-    );
-
-    showMessage(
-      "adminMessage",
-      "❌ খেলোয়াড় তালিকা পাওয়া যায়নি: " +
-      error.message,
-      "error"
-    );
-
-    return;
-  }
-
+function loadAdminPlayers(){
 
   const container =
-    document.getElementById("adminPlayers");
+    document.getElementById(
+      "adminPlayers"
+    );
 
 
   container.innerHTML = "";
 
 
-  if(!data || data.length === 0){
+  if(players.length === 0){
 
     container.innerHTML =
-      "<p>কোনো খেলোয়াড় নেই।</p>";
+      `<div class="empty">
+        কোনো খেলোয়াড় নেই।
+      </div>`;
 
     return;
+
   }
 
 
-  data.forEach(player=>{
+  players.forEach(
+    player => {
 
-    const div =
-      document.createElement("div");
+      const div =
+        document.createElement(
+          "div"
+        );
 
-    div.className =
-      "admin-player";
+
+      div.className =
+        "admin-player";
 
 
-    div.innerHTML = `
+      div.innerHTML = `
 
-      <div class="admin-player-top">
+        <div class="admin-player-top">
 
-        <div>
+          <div>
+
+            <strong>
+              ${escapeHtml(
+                player.name
+              )}
+            </strong>
+
+            <div class="small">
+
+              ${
+                player.id === ADMIN_ID
+                ? "👑 Admin"
+                : "👤 Player"
+              }
+
+            </div>
+
+          </div>
+
+
           <strong>
-            ${escapeHtml(player.name)}
+
+            💰
+            ${player.points}
+            পয়েন্ট
+
           </strong>
 
-          <div class="small">
-            ID: ${player.id}
-          </div>
         </div>
 
-        <strong>
-          💰 ${player.points} পয়েন্ট
-        </strong>
 
-      </div>
-
-
-      <div class="admin-actions">
-
-        <button
-          class="secondary"
-          onclick="addPoints('${player.id}',50)"
+        <div
+          class="admin-actions"
         >
-          +৫০
-        </button>
 
-        <button
-          class="secondary"
-          onclick="addPoints('${player.id}',100)"
-        >
-          +১০০
-        </button>
-
-        <button
-          class="warning"
-          onclick="addPoints('${player.id}',500)"
-        >
-          +৫০০
-        </button>
-
-      </div>
-
-    `;
+          <button
+            class="secondary"
+            onclick="
+              addPoints(
+                '${player.id}',
+                50
+              )
+            "
+          >
+            +৫০
+          </button>
 
 
-    container.appendChild(div);
+          <button
+            class="secondary"
+            onclick="
+              addPoints(
+                '${player.id}',
+                100
+              )
+            "
+          >
+            +১০০
+          </button>
 
-  });
+
+          <button
+            class="warning"
+            onclick="
+              addPoints(
+                '${player.id}',
+                500
+              )
+            "
+          >
+            +৫০০
+          </button>
+
+        </div>
+
+      `;
+
+
+      container.appendChild(div);
+
+    }
+  );
 
 }
 
@@ -1516,10 +1718,12 @@ async function loadAdminPlayers(){
    ADMIN: CREATE PLAYER
 ========================================= */
 
-async function createPlayer(){
+function createPlayer(){
 
-  if(!currentPlayer ||
-     currentPlayer.id !== ADMIN_ID){
+  if(
+    !currentPlayer ||
+    currentPlayer.id !== ADMIN_ID
+  ){
 
     showMessage(
       "adminMessage",
@@ -1528,11 +1732,14 @@ async function createPlayer(){
     );
 
     return;
+
   }
 
 
   const input =
-    document.getElementById("newPlayerName");
+    document.getElementById(
+      "newPlayerName"
+    );
 
 
   const name =
@@ -1548,79 +1755,75 @@ async function createPlayer(){
     );
 
     return;
+
   }
 
 
-  try{
-
-    const {
-      data,
-      error
-    } =
-      await supabaseClient
-      .from("players")
-      .insert({
-        name:name,
-        points:100
-      })
-      .select()
-      .single();
-
-
-    if(error){
-
-      throw new Error(
-        error.message
-      );
-
-    }
-
-
-    /*
-      Initial history
-    */
-
-    await supabaseClient
-      .from("point_history")
-      .insert({
-
-        player_id:data.id,
-
-        points:100,
-
-        type:"INITIAL",
-
-        description:
-          "Admin নতুন খেলোয়াড় তৈরি করেছে"
-
-      });
-
-
-    input.value = "";
-
-
-    showMessage(
-      "adminMessage",
-      `✅ ${name} তৈরি হয়েছে। শুরু পয়েন্ট: ১০০`,
-      "success"
+  const exists =
+    players.some(
+      p =>
+        p.name.toLowerCase()
+        ===
+        name.toLowerCase()
     );
 
 
-    await loadAdminPlayers();
-
-
-  }catch(error){
-
-    console.error(error);
+  if(exists){
 
     showMessage(
       "adminMessage",
-      "❌ খেলোয়াড় তৈরি হয়নি: " +
-      error.message,
+      "❌ এই নামে খেলোয়াড় ইতিমধ্যে আছে।",
       "error"
     );
 
+    return;
+
   }
+
+
+  const newPlayer = {
+
+    id:
+      "PLAYER-" +
+      Date.now() +
+      "-" +
+      Math.floor(
+        Math.random()*10000
+      ),
+
+    name:name,
+
+    points:100,
+
+    isAdmin:false,
+
+    createdAt:
+      new Date().toISOString(),
+
+    history:[]
+
+  };
+
+
+  players.push(
+    newPlayer
+  );
+
+
+  saveData();
+
+
+  input.value = "";
+
+
+  showMessage(
+    "adminMessage",
+    `✅ ${name} তৈরি হয়েছে। শুরু পয়েন্ট: ১০০`,
+    "success"
+  );
+
+
+  loadAdminPlayers();
 
 }
 
@@ -1629,10 +1832,15 @@ async function createPlayer(){
    ADMIN: ADD POINTS
 ========================================= */
 
-async function addPoints(playerId,amount){
+function addPoints(
+  playerId,
+  amount
+){
 
-  if(!currentPlayer ||
-     currentPlayer.id !== ADMIN_ID){
+  if(
+    !currentPlayer ||
+    currentPlayer.id !== ADMIN_ID
+  ){
 
     showMessage(
       "adminMessage",
@@ -1641,130 +1849,102 @@ async function addPoints(playerId,amount){
     );
 
     return;
+
   }
 
 
-  try{
-
-    /*
-      Get player
-    */
-
-    const {
-      data:player,
-      error:fetchError
-    } =
-      await supabaseClient
-      .from("players")
-      .select("*")
-      .eq("id",playerId)
-      .single();
-
-
-    if(fetchError){
-
-      throw new Error(
-        fetchError.message
-      );
-
-    }
-
-
-    const newPoints =
-      Number(player.points || 0)
-      + Number(amount);
-
-
-    /*
-      Update
-    */
-
-    const {
-      error:updateError
-    } =
-      await supabaseClient
-      .from("players")
-      .update({
-        points:newPoints
-      })
-      .eq("id",playerId);
-
-
-    if(updateError){
-
-      throw new Error(
-        updateError.message
-      );
-
-    }
-
-
-    /*
-      History
-    */
-
-    const {
-      error:historyError
-    } =
-      await supabaseClient
-      .from("point_history")
-      .insert({
-
-        player_id:playerId,
-
-        points:newPoints,
-
-        type:"ADMIN_ADD",
-
-        description:
-          `Admin +${amount} পয়েন্ট যোগ করেছে`
-
-      });
-
-
-    if(historyError){
-
-      console.warn(
-        "History error:",
-        historyError
-      );
-
-    }
-
-
-    showMessage(
-      "adminMessage",
-      `✅ ${player.name}-কে +${amount} পয়েন্ট দেওয়া হয়েছে।`,
-      "success"
+  const player =
+    players.find(
+      p =>
+        p.id === playerId
     );
 
 
-    await loadAdminPlayers();
-
-
-    /*
-      যদি Admin নিজেকেই points দেয়
-    */
-
-    if(playerId === currentPlayer.id){
-
-      currentPlayer.points =
-        newPoints;
-
-      updatePlayerUI();
-
-    }
-
-  }catch(error){
-
-    console.error(error);
+  if(!player){
 
     showMessage(
       "adminMessage",
-      "❌ পয়েন্ট যোগ করা যায়নি: " +
-      error.message,
+      "❌ খেলোয়াড় পাওয়া যায়নি।",
       "error"
     );
+
+    return;
+
+  }
+
+
+  player.points =
+    Number(player.points)
+    +
+    Number(amount);
+
+
+  /*
+    Admin history
+  */
+
+  if(!player.history){
+
+    player.history = [];
+
+  }
+
+
+  player.history.unshift({
+
+    id:Date.now(),
+
+    createdAt:
+      new Date().toISOString(),
+
+    type:"ADMIN_ADD",
+
+    pointsChange:
+      amount,
+
+    pointsAfter:
+      player.points
+
+  });
+
+
+  player.history =
+    player.history.slice(
+      0,
+      100
+    );
+
+
+  saveData();
+
+
+  showMessage(
+    "adminMessage",
+    `✅ ${player.name}-কে +${amount} পয়েন্ট দেওয়া হয়েছে।`,
+    "success"
+  );
+
+
+  loadAdminPlayers();
+
+
+  /*
+    নিজের points update
+  */
+
+  if(
+    player.id ===
+    currentPlayer.id
+  ){
+
+    currentPlayer =
+      player;
+
+    updatePlayerUI();
+
+    loadHistory();
+
+    loadStatistics();
 
   }
 
@@ -1777,48 +1957,68 @@ async function addPoints(playerId,amount){
 
 function logoutPlayer(){
 
-  currentPlayer = null;
+  currentPlayer =
+    null;
 
-  gameRunning = false;
 
-
-  document
-    .getElementById("gameSection")
-    .classList.add("hidden");
+  gameRunning =
+    false;
 
 
   document
-    .getElementById("loginSection")
-    .classList.remove("hidden");
+    .getElementById(
+      "gameSection"
+    )
+    .classList
+    .add("hidden");
 
 
   document
-    .getElementById("playerName")
+    .getElementById(
+      "loginSection"
+    )
+    .classList
+    .remove("hidden");
+
+
+  document
+    .getElementById(
+      "playerName"
+    )
     .value = "";
 
 
   document
-    .getElementById("dice1")
+    .getElementById(
+      "dice1"
+    )
     .innerText = "?";
 
 
   document
-    .getElementById("dice2")
+    .getElementById(
+      "dice2"
+    )
     .innerText = "?";
 
 
   document
-    .getElementById("diceTotal")
+    .getElementById(
+      "diceTotal"
+    )
     .innerText = "-";
 
 
   document
-    .getElementById("gameResult")
+    .getElementById(
+      "gameResult"
+    )
     .innerText = "";
 
 
-  hideMessage("gameMessage");
-  hideMessage("loginMessage");
+  hideMessage(
+    "gameMessage"
+  );
 
 }
 
@@ -1830,10 +2030,14 @@ function logoutPlayer(){
 function escapeHtml(text){
 
   const div =
-    document.createElement("div");
+    document.createElement(
+      "div"
+    );
+
 
   div.textContent =
     text;
+
 
   return div.innerHTML;
 
@@ -1845,74 +2049,23 @@ function escapeHtml(text){
 ========================================= */
 
 document
-  .getElementById("playerName")
-  .addEventListener("keydown",function(event){
+  .getElementById(
+    "playerName"
+  )
+  .addEventListener(
+    "keydown",
+    function(event){
 
-    if(event.key === "Enter"){
+      if(
+        event.key === "Enter"
+      ){
 
-      startGame();
+        startGame();
+
+      }
 
     }
-
-  });
-
-
-/* =========================================
-   CONNECTION TEST
-========================================= */
-
-async function testConnection(){
-
-  try{
-
-    const response =
-      await fetch(
-        SUPABASE_URL + "/rest/v1/",
-        {
-          method:"GET",
-          headers:{
-            apikey:SUPABASE_KEY,
-            Authorization:
-              "Bearer " + SUPABASE_KEY
-          }
-        }
-      );
-
-
-    if(!response.ok){
-
-      console.error(
-        "Supabase connection failed:",
-        response.status,
-        await response.text()
-      );
-
-      return false;
-    }
-
-
-    console.log(
-      "✅ Supabase connection OK"
-    );
-
-    return true;
-
-
-  }catch(error){
-
-    console.error(
-      "❌ Supabase Failed to fetch:",
-      error
-    );
-
-    return false;
-
-  }
-
-}
-
-
-testConnection();
+  );
 
 </script>
 
